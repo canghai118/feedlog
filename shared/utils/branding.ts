@@ -71,7 +71,8 @@ function oklchToLinear({ l: L, c: C, h: H }: Oklch): [number, number, number] {
 const luminance = ([r, g, b]: [number, number, number]) => 0.2126 * r + 0.7152 * g + 0.0722 * b
 const contrast = (y1: number, y2: number) => (Math.max(y1, y2) + 0.05) / (Math.min(y1, y2) + 0.05)
 const WHITE_FG = { css: 'oklch(1 0 0)', y: 1 }
-const DARK_FG = { css: 'oklch(0.275 0.009 28.9)', y: luminance(oklchToLinear({ l: 0.275, c: 0.009, h: 28.9 })) }
+const DARK_FG_OKLCH: Oklch = { l: 0.275, c: 0.009, h: 28.9 }
+const DARK_FG = { css: 'oklch(0.275 0.009 28.9)', y: luminance(oklchToLinear(DARK_FG_OKLCH)) }
 
 function pickForeground(accent: Oklch): string {
   const y = luminance(oklchToLinear(accent))
@@ -83,6 +84,19 @@ const oklchStr = ({ l, c, h }: Oklch) => `oklch(${round(l)} ${round(c)} ${round(
 
 export function isValidBrandHex(hex: string): boolean {
   return /^#[0-9a-fA-F]{6}$/.test(hex.trim())
+}
+
+const srgb = (v: number) => (v <= 0.0031308 ? v * 12.92 : 1.055 * v ** (1 / 2.4) - 0.055)
+
+function linearToHex(rgb: [number, number, number]): string {
+  return `#${rgb.map(v => Math.round(Math.max(0, Math.min(1, srgb(v))) * 255).toString(16).padStart(2, '0')).join('').toUpperCase()}`
+}
+
+export function pickHexForeground(seedHex: string): string {
+  const y = luminance(hexToLinear(normalizeBrandHex(seedHex)))
+  return contrast(y, WHITE_FG.y) >= contrast(y, DARK_FG.y)
+    ? '#FFFFFF'
+    : linearToHex(oklchToLinear(DARK_FG_OKLCH))
 }
 
 export function normalizeBrandHex(hex: string | undefined | null): string {

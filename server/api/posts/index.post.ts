@@ -1,5 +1,6 @@
 import { post, postSearch, user, postSubscription } from '#layers/feedlog/server/db/schemas'
 import { eq } from 'drizzle-orm'
+import { getRequestURL } from 'h3'
 import { createPostSchema } from '#layers/feedlog/shared/schemas/post'
 import { isActorAdmin } from '#layers/feedlog/shared/utils/notifications'
 
@@ -47,6 +48,20 @@ export default defineEventHandler(async (event) => {
   event.waitUntil(
     generatePostEmbedding(created.id, orgId, body.title, body.content, contentHash),
   )
+
+  if (!isActorAdmin(session, orgId)) {
+    event.waitUntil(
+      emitAdminNotification({
+        orgId,
+        typeKey: 'post.created',
+        postSlug: created.slug,
+        postTitle: created.title,
+        snippet: body.content,
+        actorId: session.user.id,
+        requestOrigin: getRequestURL(event).origin,
+      }).catch((err: unknown) => console.error('[notifications] post created emit failed', err)),
+    )
+  }
 
   const [author] = await db
     .select({ id: user.id, name: user.name, image: user.image })
