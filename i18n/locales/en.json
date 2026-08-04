@@ -283,7 +283,8 @@
       "deleteDescription": "This action cannot be undone. This will permanently delete the comment and all its replies.",
       "notifyUpvoters": "Notify upvoters",
       "notifyUpvotersHint": "Also email upvoters. The author and subscribers always get it.",
-      "emailUpvoters": "Email upvoters"
+      "emailUpvoters": "Email upvoters",
+      "adminBadge": "Admin"
     },
     "statusNotify": {
       "title": "Notify upvoters by email?",
