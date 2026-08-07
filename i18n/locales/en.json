@@ -48,7 +48,8 @@
     "workspace": "Workspace",
     "sso": "Single Sign-On",
     "dashboard": "Dashboard",
-    "changePassword": "Change Password"
+    "changePassword": "Change Password",
+    "widget": "Widget"
   },
   "board": {
     "boards": "Boards",
@@ -198,6 +199,7 @@
       "bodyPlaceholder": "Explain your thoughts in detail...",
       "submitting": "Submitting...",
       "submit": "Post Feedback",
+      "signInAndSubmit": "Sign in & Post",
       "dialogTitle": "Submit Feedback",
       "dialogDescription": "Submit new feedback",
       "errors": {
@@ -646,6 +648,47 @@
           "desc": "Full access. Can manage members, settings, and ownership."
         }
       }
+    },
+    "widget": {
+      "title": "Widget",
+      "subtitle": "The in-app feedback widget embedded in your product",
+      "loadFailed": "Failed to load widget settings.",
+      "saveFailed": "Failed to save.",
+      "saved": "Saved",
+      "installSection": "Installation",
+      "installDesc": "Install the SDK in your product, then initialise it with your workspace URL.",
+      "baseUrlLabel": "Workspace URL",
+      "baseUrlHint": "Pass this as baseUrl when initialising the SDK.",
+      "serverLabel": "On your server",
+      "serverHint": "The widget trusts whoever this endpoint says the visitor is, so keep it behind your own sign-in. Get the secret from Developer → SSO.",
+      "snippetLabel": "Install",
+      "copy": "Copy",
+      "copied": "Copied",
+      "enabledLabel": "Enable widget",
+      "enabledHint": "When off, the SDK renders nothing on your site.",
+      "supportSection": "Contact support",
+      "supportDesc": "When a message matches a rule below, the assistant points the visitor to support instead of creating public feedback.",
+      "emailLabel": "Support email",
+      "emailPlaceholder": "support{'@'}example.com",
+      "emailHint": "Without an address the assistant still suggests contacting support, just without naming one.",
+      "save": "Save",
+      "rulesLabel": "Rules",
+      "rulesHint": "Each enabled rule is added to the assistant instructions verbatim.",
+      "builtinBadge": "Built-in",
+      "addRule": "Add rule",
+      "editRule": "Edit rule",
+      "ruleLabel": "Redirect to support when…",
+      "rulePlaceholder": "user asks about enterprise contracts or custom pricing",
+      "ruleHint": "Complete the sentence above. Describe the situation, not the wording.",
+      "activeCount": "{count} of {max} rules enabled",
+      "limitTitle": "Rule limit reached",
+      "limitDesc": "At most {max} rules can be enabled at once. Turn one off before enabling another.",
+      "gotIt": "Got it",
+      "deleteTitle": "Delete this rule?",
+      "deleteDesc": "The assistant will stop redirecting to support for this situation.",
+      "deleteConfirm": "Delete",
+      "cancel": "Cancel",
+      "ownerOnly": "Only workspace owners and managers can change widget settings."
     }
   },
   "seo": {
@@ -655,5 +698,33 @@
     "postFallback": "Feedback",
     "changelogFallback": "Changelog",
     "titleWithOrg": "{title} - {name}"
+  },
+  "widget": {
+    "title": "Feedback",
+    "subtitle": "Help us make {product} better — share problems and ideas",
+    "allFeedback": "All feedback",
+    "seeOthers": "See what others have suggested",
+    "thisProduct": "this product",
+    "greeting": "Hi, I'm the feedback assistant — an AI, not a human agent 👋 Describe what's broken or missing, and I'll file it for the {product} team.",
+    "placeholder": "Describe your feedback…",
+    "send": "Send",
+    "thinking": "Reading your message…",
+    "close": "Close",
+    "back": "Back",
+    "myFeedback": "My feedback",
+    "viewAll": "View all feedback",
+    "noFeedback": "You haven't submitted any feedback yet.",
+    "postCount": "{count} post | {count} posts",
+    "withUpdates": "{count} with updates",
+    "viewOnBoard": "View on board",
+    "loading": "Loading…",
+    "loginTitle": "Sign in to send feedback",
+    "loginDesc": "Sign in to your account to share feedback and follow its progress.",
+    "login": "Sign in",
+    "sendFailed": "Could not send that. Please try again.",
+    "loadFailed": "Could not load your feedback.",
+    "attachImage": "Attach image",
+    "uploadFailed": "Could not upload that image. Please try again.",
+    "uploadTooLarge": "Images must be smaller than {size}MB."
   }
 }

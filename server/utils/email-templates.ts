@@ -1,7 +1,7 @@
 // Email HTML templates — auto-imported by Nitro.
 // Brand primary color matches public/logo.svg.
 import { STATUS_CONFIG } from '../../shared/types/post'
-import { normalizeBrandHex, pickHexForeground } from '../../shared/utils/branding'
+import { normalizeBrandHex, pickBrandForegroundHex } from '../../shared/utils/branding'
 
 const BRAND_COLOR = '#C45A46'
 const FONT_STACK = `-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif`
@@ -262,7 +262,7 @@ export function renderNotificationEmail(input: {
   const brand = normalizeBrandHex(input.brandColor)
   const html = notificationShell(card.html.replaceAll('{{postUrl}}', input.postUrl), preheader, footerReason)
     .replaceAll('{{brand}}', brand)
-    .replaceAll('{{brandFg}}', pickHexForeground(brand))
+    .replaceAll('{{brandFg}}', pickBrandForegroundHex(brand))
   const text = `${card.text}\n\nView: ${input.postUrl}\n\n—\n${footerReason}`
   return { subject: card.subject, html, text }
 }

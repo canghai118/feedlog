@@ -25,6 +25,12 @@ export {
   postSubscription,
 } from './notifications'
 export type { NotificationPayload } from './notifications'
+export {
+  organizationWidget,
+  organizationWidgetRelations,
+  postUnread,
+} from './widget'
+export type { WidgetCustomRule } from './widget'
 import { user, session, account, organization, member, invitation } from './auth'
 
 // Custom type for pgvector's vector column
@@ -83,6 +89,10 @@ export const post = pgTable('post', {
   index('idx_post_org_board_status').on(t.orgId, t.boardId, t.status, sql`${t.createdAt} DESC`),
   // Roadmap: Group by status + sort by votes
   index('idx_post_org_status_votes').on(t.orgId, t.status, sql`${t.voteCount} DESC`, sql`${t.id} DESC`),
+  // Widget: the visitor's own feedback list. Every other index starts
+  // (org_id, <something-else>), so an author filter would otherwise scan the
+  // org's whole post table.
+  index('idx_post_org_author_created').on(t.orgId, t.authorId, sql`${t.createdAt} DESC`),
   // Per-org slug uniqueness
   uniqueIndex('idx_post_org_slug').on(t.orgId, t.slug),
   // Partial index on merged_to for merged posts lookup

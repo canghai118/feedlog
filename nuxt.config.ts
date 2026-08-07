@@ -77,6 +77,7 @@ export default defineNuxtConfig({
     // runtime when S3_* env vars are set. Skipped on cloudflare-module
     // and vercel presets where NuxtHub's R2 / Vercel Blob driver applies.
     resolver.resolve('./modules/blob-s3/module'),
+    resolver.resolve('./modules/widget-preload/module'),
   ],
   shadcn: {
     prefix: '',
@@ -107,6 +108,44 @@ export default defineNuxtConfig({
   },
   hub: {
     blob: true,
+  },
+
+  // The widget frame's identity rides in the URL fragment, which never reaches
+  // the server, so a server render can only produce an empty shell — one the
+  // visitor never sees, because the SDK keeps the frame hidden until it reports
+  // ready. Rendering it costs ~290ms of TTFB and a hydration pass on top.
+  //
+  // That shell is the same bytes for everyone opening the frame on a host, so
+  // it is worth caching — but briefly: a deploy rotates the asset hashes the
+  // shell points at, and a stale one asks for chunks the new image never built.
+  routeRules: {
+    '/widget/embed': {
+      ssr: false,
+      headers: { 'cache-control': 'public, max-age=300, stale-while-revalidate=600' },
+    },
+    '/*/widget/embed': {
+      ssr: false,
+      headers: { 'cache-control': 'public, max-age=300, stale-while-revalidate=600' },
+    },
+  },
+
+  icon: {
+    // Everything the widget frame draws. Bundled because the frame otherwise
+    // fetches two icon collections over HTTP while the visitor waits.
+    clientBundle: {
+      icons: [
+        'lucide:alert-circle',
+        'lucide:arrow-left',
+        'lucide:arrow-up-right',
+        'lucide:chevron-up',
+        'lucide:globe',
+        'lucide:image',
+        'lucide:inbox',
+        'lucide:loader-2',
+        'lucide:message-circle',
+        'lucide:x',
+      ],
+    },
   },
 
   build: {
