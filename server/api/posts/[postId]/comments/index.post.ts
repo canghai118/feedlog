@@ -103,7 +103,6 @@ export default defineEventHandler(async (event) => {
     )
   }
 
-  // Fetch author info
   const [author] = await db
     .select({ id: user.id, name: user.name, image: user.image })
     .from(user)
@@ -117,7 +116,7 @@ export default defineEventHandler(async (event) => {
     replyCount: created!.replyCount,
     likeCount: created!.likeCount,
     hasLiked: false,
-    author: author ?? { id: session.user.id, name: null, image: null },
+    author: { ...(author ?? { id: session.user.id, name: null, image: null }), isAdmin: isActorAdmin(session, orgId) },
     content: created!.content,
     editedAt: created!.editedAt,
     createdAt: created!.createdAt,
