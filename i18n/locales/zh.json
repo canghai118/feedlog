@@ -285,7 +285,8 @@
       "deleteDescription": "此操作无法撤销,将永久删除该评论及其所有回复。",
       "notifyUpvoters": "通知点赞者",
       "notifyUpvotersHint": "额外通知点赞过的人。作者和已订阅的人始终会收到。",
-      "emailUpvoters": "邮件通知点赞者"
+      "emailUpvoters": "邮件通知点赞者",
+      "adminBadge": "管理员"
     },
     "statusNotify": {
       "title": "要给点赞者发邮件通知吗？",
