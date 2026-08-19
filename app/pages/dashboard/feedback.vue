@@ -202,7 +202,7 @@ function onPostDeleted(postId: string) {
   <!-- Top bar -->
   <header class="h-14 md:h-16 px-4 md:px-6 border-b border-border flex items-center justify-between shrink-0 bg-card backdrop-blur-sm">
     <div class="flex items-center gap-4">
-      <h2 class="font-heading text-lg font-bold">{{ $t('dashboard.feedback.title') }}</h2>
+      <h2 class="hidden sm:block font-heading text-lg font-bold">{{ $t('dashboard.feedback.title') }}</h2>
       <div class="hidden md:block h-4 w-[1px] bg-border" />
       <span class="hidden md:block text-xs font-medium text-muted-foreground">{{ $t('dashboard.feedback.subtitle') }}</span>
     </div>
@@ -238,11 +238,12 @@ function onPostDeleted(postId: string) {
 
       <!-- Create button -->
       <button
-        class="h-9 px-4 rounded-lg bg-primary text-primary-foreground text-xs font-heading font-bold hover:opacity-90 transition-all flex items-center gap-2"
+        class="h-9 px-3 sm:px-4 rounded-lg bg-primary text-primary-foreground text-xs font-heading font-bold hover:opacity-90 transition-all flex items-center gap-2 shrink-0"
+        :aria-label="$t('dashboard.feedback.create')"
         @click="showSubmit = true"
       >
         <Icon name="lucide:plus" size="16" />
-        {{ $t('dashboard.feedback.create') }}
+        <span class="hidden sm:inline">{{ $t('dashboard.feedback.create') }}</span>
       </button>
     </div>
   </header>
