@@ -430,7 +430,25 @@
     "filter": {
       "status": "状态",
       "board": "看板",
-      "merged": "合并"
+      "merged": "合并",
+      "author": "提交人",
+      "created": "创建时间",
+      "noBoard": "无板块",
+      "noFieldsLeft": "没有可用字段",
+      "noMatches": "无匹配项",
+      "pickDate": "选择日期",
+      "pickValue": "选择值",
+      "searchPlaceholder": "搜索",
+      "last7": "近 7 天",
+      "last30": "近 30 天",
+      "thisQuarter": "本季度",
+      "op": {
+        "is": "是",
+        "not": "不是",
+        "before": "早于",
+        "after": "晚于",
+        "range": "区间"
+      }
     },
     "nav": {
       "srTitle": "导航",
@@ -487,7 +505,10 @@
       "entriesShort": "共 {total} 条",
       "searchPlaceholder": "搜索反馈…",
       "searchAria": "搜索反馈",
-      "clearSearch": "清除搜索"
+      "clearSearch": "清除搜索",
+      "clearAllFilters": "清空全部筛选",
+      "quickFilters": "快捷筛选",
+      "statuses": "状态"
     },
     "sso": {
       "title": "单点登录",

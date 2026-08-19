@@ -430,7 +430,25 @@
     "filter": {
       "status": "Status",
       "board": "Board",
-      "merged": "Merged"
+      "merged": "Merged",
+      "author": "Author",
+      "created": "Created",
+      "noBoard": "No board",
+      "noFieldsLeft": "No filters left",
+      "noMatches": "No matches",
+      "pickDate": "Pick a date",
+      "pickValue": "Pick a value",
+      "searchPlaceholder": "Search",
+      "last7": "Last 7 days",
+      "last30": "Last 30 days",
+      "thisQuarter": "This quarter",
+      "op": {
+        "is": "Is",
+        "not": "Is not",
+        "before": "Before",
+        "after": "After",
+        "range": "Between"
+      }
     },
     "nav": {
       "srTitle": "Navigation",
@@ -487,7 +505,10 @@
       "entriesShort": "{total} entries",
       "searchPlaceholder": "Search feedback…",
       "searchAria": "Search feedback",
-      "clearSearch": "Clear search"
+      "clearSearch": "Clear search",
+      "clearAllFilters": "Clear all filters",
+      "quickFilters": "Quick filters",
+      "statuses": "Statuses"
     },
     "sso": {
       "title": "Single Sign-On",
