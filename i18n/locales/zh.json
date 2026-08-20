@@ -434,6 +434,7 @@
       "author": "提交人",
       "created": "创建时间",
       "noBoard": "无板块",
+      "staleValue": "已失效",
       "noFieldsLeft": "没有可用字段",
       "noMatches": "无匹配项",
       "pickDate": "选择日期",

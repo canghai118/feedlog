@@ -45,14 +45,22 @@ const OPS: Record<string, string[]> = {
 
 const opLabel = (op: string) => t(`dashboard.filter.op.${op}`)
 
+const firstKnown = computed(() => props.values.map(v => props.options.find(o => o.value === v)).find(Boolean))
+
+// The option-list guard matters: candidates load async, and nothing resolves until they do.
+const isStale = computed(() => props.kind !== 'date'
+  && props.values.length > 0
+  && props.options.length > 0
+  && !firstKnown.value)
+
 const valueLabel = computed(() => {
   if (props.kind === 'date') {
     if (props.op === 'range') return `${props.from || '…'} – ${props.to || '…'}`
     return props.from || props.to || t('dashboard.filter.pickDate')
   }
   if (!props.values.length) return t('dashboard.filter.pickValue')
-  const first = props.options.find(o => o.value === props.values[0])
-  return first?.label ?? props.values[0]!
+  if (isStale.value) return t('dashboard.filter.staleValue')
+  return firstKnown.value?.label ?? props.values[0]!
 })
 
 const extraCount = computed(() => (props.kind === 'date' ? 0 : Math.max(0, props.values.length - 1)))
@@ -126,7 +134,10 @@ function initials(name: string) {
 
     <DropdownMenu>
       <DropdownMenuTrigger as-child>
-        <button class="px-2.5 py-1 text-primary text-[10px] font-bold flex items-center gap-1 hover:bg-background/50 transition-colors cursor-pointer whitespace-nowrap">
+        <button
+          class="px-2.5 py-1 text-[10px] font-bold flex items-center gap-1 hover:bg-background/50 transition-colors cursor-pointer whitespace-nowrap"
+          :class="isStale ? 'text-muted-foreground italic' : 'text-primary'"
+        >
           {{ valueLabel }}
           <span v-if="extraCount" class="text-muted-foreground font-semibold">+{{ extraCount }}</span>
           <Icon name="lucide:chevron-down" size="10" />

@@ -434,6 +434,7 @@
       "author": "Author",
       "created": "Created",
       "noBoard": "No board",
+      "staleValue": "Unavailable",
       "noFieldsLeft": "No filters left",
       "noMatches": "No matches",
       "pickDate": "Pick a date",
