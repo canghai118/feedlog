@@ -258,35 +258,33 @@ function onPostDeleted(postId: string) {
     />
     <div class="flex-1 flex flex-col overflow-hidden bg-card min-w-0">
       <!-- Filter bar -->
-      <div v-if="activeChips.length > 0" class="px-6 py-4 border-b border-border flex items-center justify-between bg-background/30">
-        <div class="flex items-center gap-2 min-w-0">
-          <span class="text-[11px] font-bold text-muted-foreground uppercase tracking-wider mr-2 shrink-0">{{ $t('dashboard.feedback.activeFilters') }}</span>
-          <div class="flex items-center gap-2 overflow-x-auto">
-            <FilterChip
-              v-for="{ condition, def } in activeChips"
-              :key="def.key"
-              :label="def.label"
-              :icon="def.icon"
-              :kind="def.kind"
-              :op="'op' in condition ? condition.op : 'is'"
-              :values="'values' in condition ? condition.values : 'value' in condition ? [condition.value] : []"
-              :from="'from' in condition ? condition.from : undefined"
-              :to="'to' in condition ? condition.to : undefined"
-              :options="def.options"
-              :searchable="'searchable' in def && def.searchable"
-              @update:op="patchCondition(def.key, { op: $event })"
-              @update:values="patchCondition(def.key, def.kind === 'single' ? { value: $event[0] } : { values: $event })"
-              @update:range="patchCondition(def.key, $event)"
-              @remove="removeCondition(def.key)"
-            />
-          </div>
-          <button
-            class="text-[10px] font-bold text-muted-foreground hover:text-primary transition-colors ml-2 underline underline-offset-2 shrink-0"
-            @click="clearAllFilters"
-          >
-            {{ $t('dashboard.feedback.clearAll') }}
-          </button>
+      <div v-if="activeChips.length > 0" class="px-6 py-4 border-b border-border flex items-end justify-between gap-3 bg-background/30">
+        <div class="flex flex-wrap items-center gap-2 min-w-0">
+          <span class="hidden sm:inline text-[11px] font-bold text-muted-foreground uppercase tracking-wider mr-2 shrink-0">{{ $t('dashboard.feedback.activeFilters') }}</span>
+          <FilterChip
+            v-for="{ condition, def } in activeChips"
+            :key="def.key"
+            :label="def.label"
+            :icon="def.icon"
+            :kind="def.kind"
+            :op="'op' in condition ? condition.op : 'is'"
+            :values="'values' in condition ? condition.values : 'value' in condition ? [condition.value] : []"
+            :from="'from' in condition ? condition.from : undefined"
+            :to="'to' in condition ? condition.to : undefined"
+            :options="def.options"
+            :searchable="'searchable' in def && def.searchable"
+            @update:op="patchCondition(def.key, { op: $event })"
+            @update:values="patchCondition(def.key, def.kind === 'single' ? { value: $event[0] } : { values: $event })"
+            @update:range="patchCondition(def.key, $event)"
+            @remove="removeCondition(def.key)"
+          />
         </div>
+        <button
+          class="relative inline-flex items-center h-7 shrink-0 text-[10px] font-bold text-muted-foreground hover:text-primary transition-colors underline underline-offset-2 after:absolute after:content-[''] after:-inset-x-3 after:-inset-y-2 sm:after:content-none"
+          @click="clearAllFilters"
+        >
+          {{ $t('dashboard.feedback.clearAll') }}
+        </button>
       </div>
 
       <!-- Data table -->
