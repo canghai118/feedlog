@@ -430,11 +430,11 @@ function onPostDeleted(postId: string) {
           </div>
 
           <!-- Desktop table -->
-          <table class="hidden md:table w-full text-left border-collapse min-w-[1000px] table-fixed">
+          <table class="hidden md:table w-full text-left border-collapse min-w-[900px] table-fixed">
             <thead class="sticky top-0 bg-background border-b border-border z-10">
               <tr>
                 <th
-                  class="w-24 px-6 py-3 text-[11px] font-bold uppercase tracking-wider text-muted-foreground cursor-pointer hover:text-primary transition-colors"
+                  class="w-[72px] px-4 py-3 text-[11px] font-bold uppercase tracking-wider text-muted-foreground cursor-pointer hover:text-primary transition-colors"
                   @click="toggleSort('votes')"
                 >
                   <div class="flex items-center gap-1">
@@ -443,10 +443,10 @@ function onPostDeleted(postId: string) {
                   </div>
                 </th>
                 <th class="w-1/4 px-4 py-3 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">{{ $t('dashboard.feedback.colTitle') }}</th>
-                <th class="w-48 px-4 py-3 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">{{ $t('dashboard.feedback.colBoard') }}</th>
-                <th class="w-36 px-4 py-3 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">{{ $t('dashboard.feedback.colAuthor') }}</th>
+                <th class="w-[152px] px-4 py-3 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">{{ $t('dashboard.feedback.colBoard') }}</th>
+                <th class="w-[160px] px-4 py-3 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">{{ $t('dashboard.feedback.colAuthor') }}</th>
                 <th
-                  class="w-24 px-4 py-3 text-[11px] font-bold uppercase tracking-wider text-muted-foreground cursor-pointer hover:text-primary transition-colors"
+                  class="w-[104px] px-4 py-3 text-[11px] font-bold uppercase tracking-wider text-muted-foreground cursor-pointer hover:text-primary transition-colors"
                   @click="toggleSort('comments')"
                 >
                   <div class="flex items-center gap-1">
@@ -455,7 +455,7 @@ function onPostDeleted(postId: string) {
                   </div>
                 </th>
                 <th
-                  class="w-32 px-4 py-3 text-[11px] font-bold uppercase tracking-wider text-muted-foreground cursor-pointer hover:text-primary transition-colors"
+                  class="w-[122px] px-4 py-3 text-[11px] font-bold uppercase tracking-wider text-muted-foreground cursor-pointer hover:text-primary transition-colors"
                   @click="toggleSort('createdAt')"
                 >
                   <div class="flex items-center gap-1">
@@ -463,7 +463,7 @@ function onPostDeleted(postId: string) {
                     <Icon v-if="sortBy === 'createdAt'" name="lucide:arrow-down" size="14" class="text-primary" />
                   </div>
                 </th>
-                <th class="w-28 px-4 py-3 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">{{ $t('dashboard.feedback.colStatus') }}</th>
+                <th class="w-[80px] px-4 py-3 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">{{ $t('dashboard.feedback.colStatus') }}</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-border">

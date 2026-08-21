@@ -30,7 +30,7 @@ const lit = (field: EnumFilterField, value: string) => railValue(props.condition
 </script>
 
 <template>
-  <aside class="hidden lg:flex w-48 shrink-0 border-r border-border bg-background/30 flex-col gap-5 p-3 overflow-y-auto">
+  <aside class="hidden min-[1160px]:flex w-48 shrink-0 border-r border-border bg-background/30 flex-col gap-5 p-3 overflow-y-auto">
     <div class="flex flex-col gap-0.5">
       <p class="px-2 mb-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
         {{ $t('dashboard.feedback.statuses') }}
