@@ -49,7 +49,7 @@ export function parseFilterQuery(query: Record<string, unknown>): FilterConditio
 // parameter name and leaves `status%21=open` in the address bar.
 export function serializeFilterQuery(
   conditions: FilterCondition[],
-  extra: { q?: string, sort?: string, page?: number } = {},
+  extra: { q?: string, sort?: string, order?: string, page?: number } = {},
 ): string {
   const parts: string[] = []
 
@@ -69,6 +69,7 @@ export function serializeFilterQuery(
   }
 
   if (extra.sort && extra.sort !== 'createdAt') parts.push(`sort=${extra.sort}`)
+  if (extra.order === 'asc') parts.push('order=asc')
   if (extra.page && extra.page > 1) parts.push(`page=${extra.page}`)
 
   return parts.join('&')
@@ -83,7 +84,7 @@ function dayBoundary(date: string, plusDays = 0): string | undefined {
 
 export function filterApiQuery(
   conditions: FilterCondition[],
-  extra: { q?: string, sort?: string, page?: number, pageSize?: number } = {},
+  extra: { q?: string, sort?: string, order?: string, page?: number, pageSize?: number } = {},
 ): Record<string, string | number | undefined> {
   const query: Record<string, string | number | undefined> = { merged: 'canonical_only', ...extra }
 

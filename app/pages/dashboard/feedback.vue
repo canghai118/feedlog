@@ -122,6 +122,7 @@ const addFilterOpen = ref(false)
 // ---- Sort & Pagination ----
 const sortBy = ref<'createdAt' | 'votes' | 'comments'>(
   (['createdAt', 'votes', 'comments'].includes(route.query.sort as string) ? route.query.sort : 'createdAt') as 'createdAt' | 'votes' | 'comments')
+const sortOrder = ref<'asc' | 'desc'>(route.query.order === 'asc' ? 'asc' : 'desc')
 const currentPage = ref(Math.max(Number(route.query.page) || 1, 1))
 const pageSize = 10
 
@@ -134,10 +135,11 @@ watch([conditions, searchTerm], () => {
 
 // replaceState, not the router — a push would re-run the route watchers and
 // refetch a list we already have.
-watch([conditions, searchTerm, sortBy, currentPage], () => {
+watch([conditions, searchTerm, sortBy, sortOrder, currentPage], () => {
   const qs = serializeFilterQuery(conditions.value, {
     q: searchTerm.value,
     sort: sortBy.value,
+    order: sortOrder.value,
     page: currentPage.value,
   })
   window.history.replaceState(window.history.state, '', qs ? `${route.path}?${qs}` : route.path)
@@ -152,6 +154,7 @@ const { data: postsData, refresh: refreshPosts, status: fetchStatus } = await us
   query: computed(() => filterApiQuery(conditions.value, {
     q: searchTerm.value || undefined,
     sort: sortBy.value,
+    order: sortOrder.value,
     page: currentPage.value,
     pageSize,
   })),
@@ -165,6 +168,7 @@ const totalPages = computed(() => Math.ceil(pagination.value.total / pagination.
 
 // Sort handler
 function toggleSort(col: 'createdAt' | 'votes' | 'comments') {
+  sortOrder.value = sortBy.value === col && sortOrder.value === 'desc' ? 'asc' : 'desc'
   sortBy.value = col
   currentPage.value = 1
 }
@@ -439,7 +443,7 @@ function onPostDeleted(postId: string) {
                 >
                   <div class="flex items-center gap-1">
                     {{ $t('dashboard.feedback.colUpvotes') }}
-                    <Icon v-if="sortBy === 'votes'" name="lucide:arrow-down" size="14" class="text-primary" />
+                    <Icon v-if="sortBy === 'votes'" :name="sortOrder === 'asc' ? 'lucide:arrow-up' : 'lucide:arrow-down'" size="14" class="text-primary" />
                   </div>
                 </th>
                 <th class="w-1/4 px-4 py-3 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">{{ $t('dashboard.feedback.colTitle') }}</th>
@@ -451,7 +455,7 @@ function onPostDeleted(postId: string) {
                 >
                   <div class="flex items-center gap-1">
                     {{ $t('dashboard.feedback.colComments') }}
-                    <Icon v-if="sortBy === 'comments'" name="lucide:arrow-down" size="14" class="text-primary" />
+                    <Icon v-if="sortBy === 'comments'" :name="sortOrder === 'asc' ? 'lucide:arrow-up' : 'lucide:arrow-down'" size="14" class="text-primary" />
                   </div>
                 </th>
                 <th
@@ -460,7 +464,7 @@ function onPostDeleted(postId: string) {
                 >
                   <div class="flex items-center gap-1">
                     {{ $t('dashboard.feedback.colCreated') }}
-                    <Icon v-if="sortBy === 'createdAt'" name="lucide:arrow-down" size="14" class="text-primary" />
+                    <Icon v-if="sortBy === 'createdAt'" :name="sortOrder === 'asc' ? 'lucide:arrow-up' : 'lucide:arrow-down'" size="14" class="text-primary" />
                   </div>
                 </th>
                 <th class="w-[80px] px-4 py-3 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">{{ $t('dashboard.feedback.colStatus') }}</th>

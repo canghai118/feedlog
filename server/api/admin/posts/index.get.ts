@@ -1,4 +1,4 @@
-import { eq, and, desc, sql } from 'drizzle-orm'
+import { eq, and, asc, desc, sql } from 'drizzle-orm'
 import { post, user } from '#layers/feedlog/server/db/schemas'
 
 // GET /api/admin/posts — Admin post list (page pagination)
@@ -10,6 +10,7 @@ export default defineEventHandler(async (event): Promise<PagePaginatedList<PostL
 
   const query = getQuery(event)
   const sort = (query.sort as string) || 'createdAt'
+  const order = query.order === 'asc' ? 'asc' : 'desc'
   const page = Math.max(Number(query.page) || 1, 1)
   const pageSize = Math.min(Number(query.pageSize) || 10, 100)
   const offset = (page - 1) * pageSize
@@ -19,6 +20,8 @@ export default defineEventHandler(async (event): Promise<PagePaginatedList<PostL
   const whereClause = and(...postFilterConditions(parsePostFilter(query, orgId)))
 
   const sortCol = sort === 'votes' ? post.voteCount : sort === 'comments' ? post.commentCount : post.createdAt
+  // The id tiebreaker follows the same direction, or equal-value rows shift between pages.
+  const orderFn = order === 'asc' ? asc : desc
 
   const [countResult] = await db
     .select({ total: sql<number>`cast(count(*) as int)` })
@@ -44,7 +47,7 @@ export default defineEventHandler(async (event): Promise<PagePaginatedList<PostL
     .from(post)
     .leftJoin(user, eq(post.authorId, user.id))
     .where(whereClause)
-    .orderBy(desc(sortCol), desc(post.id))
+    .orderBy(orderFn(sortCol), orderFn(post.id))
     .limit(pageSize)
     .offset(offset)
 
