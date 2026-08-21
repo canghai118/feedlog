@@ -55,27 +55,45 @@ const availableFields = computed(() => {
   return fieldDefs.value.filter(d => !used.has(d.key))
 })
 
-function addCondition(key: FieldKey) {
-  const created: FilterCondition = key === 'created'
+function blankCondition(key: FieldKey): FilterCondition {
+  return key === 'created'
     ? { field: 'created', op: 'after' }
     : key === 'merged'
-      ? { field: 'merged', value: 'canonical_only' }
+      ? { field: 'merged', value: '' }
       : { field: key as EnumFilterField, op: 'is', values: [] }
-  conditions.value = [...conditions.value, created]
+}
+
+function hasValue(c: FilterCondition) {
+  if (c.field === 'created') return Boolean(c.from || c.to)
+  if (c.field === 'merged') return Boolean(c.value)
+  return c.values.length > 0
 }
 
 const pickingField = ref<FieldKey | null>(null)
+const draft = ref<FilterCondition | null>(null)
 
 const picking = computed(() => {
-  if (!pickingField.value) return null
   const def = fieldDefs.value.find(d => d.key === pickingField.value)
-  const condition = conditions.value.find(c => c.field === pickingField.value)
-  return def && condition ? { def, condition } : null
+  return def && draft.value ? { def, condition: draft.value } : null
 })
 
 function startPicking(key: FieldKey) {
-  addCondition(key)
   pickingField.value = key
+  draft.value = blankCondition(key)
+}
+
+function resetPicking() {
+  pickingField.value = null
+  draft.value = null
+}
+
+// Also removes: unchecking the last value must drop the condition, not leave an empty chip.
+function patchDraft(patch: Record<string, unknown>) {
+  if (!draft.value) return
+  const next = { ...draft.value, ...patch } as FilterCondition
+  draft.value = next
+  const rest = conditions.value.filter(c => c.field !== next.field)
+  conditions.value = hasValue(next) ? [...rest, next] : rest
 }
 
 function patchCondition(field: string, patch: Record<string, unknown>) {
@@ -225,7 +243,7 @@ function onPostDeleted(postId: string) {
       <AdminFeedbackSearch v-model="searchTerm" />
 
       <!-- Filters button -->
-      <DropdownMenu v-model:open="addFilterOpen" @update:open="pickingField = null">
+      <DropdownMenu v-model:open="addFilterOpen" @update:open="resetPicking">
         <DropdownMenuTrigger as-child>
           <button
             class="h-9 px-3 rounded-lg border border-border bg-background text-xs font-heading font-bold text-muted-foreground hover:text-foreground hover:border-primary transition-all flex items-center gap-2"
@@ -238,7 +256,7 @@ function onPostDeleted(postId: string) {
           <template v-if="picking">
             <button
               class="w-full flex items-center gap-1.5 px-2 py-1.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors border-b border-border"
-              @click="pickingField = null"
+              @click="resetPicking"
             >
               <Icon name="lucide:chevron-left" size="12" class="shrink-0" />
               {{ picking.def.label }}
@@ -251,9 +269,9 @@ function onPostDeleted(postId: string) {
               :to="'to' in picking.condition ? picking.condition.to : undefined"
               :options="picking.def.options"
               :searchable="'searchable' in picking.def && picking.def.searchable"
-              @update:op="patchCondition(picking.def.key, { op: $event })"
-              @update:values="patchCondition(picking.def.key, picking.def.kind === 'single' ? { value: $event[0] } : { values: $event })"
-              @update:range="patchCondition(picking.def.key, $event)"
+              @update:op="patchDraft({ op: $event })"
+              @update:values="patchDraft(picking.def.kind === 'single' ? { value: $event[0] } : { values: $event })"
+              @update:range="patchDraft($event)"
             />
           </template>
           <template v-else>
