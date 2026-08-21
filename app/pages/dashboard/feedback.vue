@@ -64,6 +64,20 @@ function addCondition(key: FieldKey) {
   conditions.value = [...conditions.value, created]
 }
 
+const pickingField = ref<FieldKey | null>(null)
+
+const picking = computed(() => {
+  if (!pickingField.value) return null
+  const def = fieldDefs.value.find(d => d.key === pickingField.value)
+  const condition = conditions.value.find(c => c.field === pickingField.value)
+  return def && condition ? { def, condition } : null
+})
+
+function startPicking(key: FieldKey) {
+  addCondition(key)
+  pickingField.value = key
+}
+
 function patchCondition(field: string, patch: Record<string, unknown>) {
   conditions.value = conditions.value.map(c => (c.field === field ? { ...c, ...patch } as FilterCondition : c))
 }
@@ -211,7 +225,7 @@ function onPostDeleted(postId: string) {
       <AdminFeedbackSearch v-model="searchTerm" />
 
       <!-- Filters button -->
-      <DropdownMenu v-model:open="addFilterOpen">
+      <DropdownMenu v-model:open="addFilterOpen" @update:open="pickingField = null">
         <DropdownMenuTrigger as-child>
           <button
             class="h-9 px-3 rounded-lg border border-border bg-background text-xs font-heading font-bold text-muted-foreground hover:text-foreground hover:border-primary transition-all flex items-center gap-2"
@@ -220,19 +234,42 @@ function onPostDeleted(postId: string) {
             {{ $t('dashboard.feedback.filtersBtn') }}
           </button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="start" class="w-48">
-          <DropdownMenuItem
-            v-for="def in availableFields"
-            :key="def.key"
-            class="cursor-pointer"
-            @select="addCondition(def.key)"
-          >
-            <Icon :name="def.icon" size="14" class="mr-2" />
-            {{ def.label }}
-          </DropdownMenuItem>
-          <p v-if="!availableFields.length" class="px-2 py-3 text-center text-[11px] text-muted-foreground">
-            {{ $t('dashboard.filter.noFieldsLeft') }}
-          </p>
+        <DropdownMenuContent align="start" :class="picking ? 'min-w-[220px] max-w-[320px]' : 'w-48'">
+          <template v-if="picking">
+            <button
+              class="w-full flex items-center gap-1.5 px-2 py-1.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors border-b border-border"
+              @click="pickingField = null"
+            >
+              <Icon name="lucide:chevron-left" size="12" class="shrink-0" />
+              {{ picking.def.label }}
+            </button>
+            <FilterValuePanel
+              :kind="picking.def.kind"
+              :op="'op' in picking.condition ? picking.condition.op : 'is'"
+              :values="'values' in picking.condition ? picking.condition.values : 'value' in picking.condition ? [picking.condition.value] : []"
+              :from="'from' in picking.condition ? picking.condition.from : undefined"
+              :to="'to' in picking.condition ? picking.condition.to : undefined"
+              :options="picking.def.options"
+              :searchable="'searchable' in picking.def && picking.def.searchable"
+              @update:op="patchCondition(picking.def.key, { op: $event })"
+              @update:values="patchCondition(picking.def.key, picking.def.kind === 'single' ? { value: $event[0] } : { values: $event })"
+              @update:range="patchCondition(picking.def.key, $event)"
+            />
+          </template>
+          <template v-else>
+            <DropdownMenuItem
+              v-for="def in availableFields"
+              :key="def.key"
+              class="cursor-pointer"
+              @select.prevent="startPicking(def.key)"
+            >
+              <Icon :name="def.icon" size="14" class="mr-2" />
+              {{ def.label }}
+            </DropdownMenuItem>
+            <p v-if="!availableFields.length" class="px-2 py-3 text-center text-[11px] text-muted-foreground">
+              {{ $t('dashboard.filter.noFieldsLeft') }}
+            </p>
+          </template>
         </DropdownMenuContent>
       </DropdownMenu>
 
