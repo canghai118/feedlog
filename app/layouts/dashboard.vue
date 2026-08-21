@@ -275,10 +275,6 @@ const developerOpen = ref(developerNav.value.some(item => route.path.startsWith(
                 <p class="text-xs font-bold truncate">{{ user?.name }}</p>
                 <p class="text-[10px] text-muted-foreground truncate">{{ user?.email }}</p>
               </div>
-              <!-- Wrapper needed: .iconify wins over .hidden, so display classes on <Icon> do nothing. -->
-              <span class="hidden min-[1360px]:block">
-                <Icon name="lucide:chevron-up" size="16" class="text-muted-foreground" />
-              </span>
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" side="top" class="w-[228px]">
