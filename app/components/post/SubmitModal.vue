@@ -257,6 +257,7 @@ watch(open, (v) => {
         <button
           class="w-full h-11 bg-primary hover:bg-primary/90 text-primary-foreground text-[15px] font-heading font-bold rounded-[10px] transition-all transform active:scale-[0.99] shadow-lg shadow-primary/20 disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
           :disabled="submitting"
+          data-fdl-action="feedback_submit"
           @click="handleSubmit"
         >
           <template v-if="submitting">{{ $t('post.submit.submitting') }}</template>
