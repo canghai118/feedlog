@@ -379,6 +379,8 @@ async function handleVote(post: PostListItem) {
         <p class="fl-empty__hint">{{ $t('board.noMatchesHint') }}</p>
         <Button
           class="h-10 px-4 rounded-lg text-[15px] font-heading font-semibold"
+          data-fdl-action="feedback_composer_open"
+          data-fdl-source="empty-state"
           @click="openSubmit()"
         >
           <Icon name="lucide:plus" size="18" />
@@ -397,6 +399,8 @@ async function handleVote(post: PostListItem) {
         v-for="p in posts"
         :key="p.id"
         class="feedback-card flex items-stretch gap-4 bg-card border border-border rounded-lg p-4 cursor-pointer"
+        data-fdl-action="feedback_open"
+        data-fdl-source="board-list"
         @click="openPostDetail(p)"
       >
         <!-- Upvote button -->
@@ -405,6 +409,8 @@ async function handleVote(post: PostListItem) {
           :class="p.hasVoted
             ? 'bg-primary text-primary-foreground border-primary shadow-sm'
             : 'bg-background text-foreground border-border hover:border-primary hover:text-primary transition-colors'"
+          data-fdl-action="feedback_vote"
+          data-fdl-source="board-list"
           @click.stop="handleVote(p)"
         >
           <Icon name="lucide:chevron-up" size="24" />

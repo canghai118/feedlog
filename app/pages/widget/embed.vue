@@ -337,6 +337,7 @@ onUnmounted(() => {
       <button
         class="w-6.5 h-6.5 rounded-full bg-secondary hover:opacity-80 transition-opacity flex items-center justify-center text-primary shrink-0"
         :aria-label="t('widget.close')"
+        data-fdl-action="widget_panel_close"
         @click="protocol.requestClose()"
       >
         <Icon name="lucide:x" size="13" />

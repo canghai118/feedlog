@@ -385,6 +385,8 @@ async function handleShare() {
               :class="post.hasVoted
                 ? 'bg-primary text-primary-foreground border-primary'
                 : 'bg-background text-foreground border-border hover:border-primary hover:text-primary'"
+              data-fdl-action="feedback_vote"
+              data-fdl-source="detail"
               @click="handleVote"
             >
               <Icon name="lucide:chevron-up" size="28" />
