@@ -176,7 +176,7 @@ function goBack() {
           <input
             v-model="form.title"
             type="text"
-            class="w-full border-0 border-b border-border bg-transparent pb-3 text-[26px] font-bold !leading-[34px] tracking-[-.01em] outline-none"
+            class="w-full border-0 border-b border-border bg-transparent pb-3 text-[26px] font-bold leading-[34px]! tracking-[-.01em] outline-none"
             :placeholder="$t('help.admin.editor.titlePlaceholder')"
           >
 
