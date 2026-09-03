@@ -43,6 +43,7 @@
     "feedback": "反馈",
     "roadmap": "路线图",
     "changelog": "更新日志",
+    "helpCenter": "帮助中心",
     "board": "看板",
     "members": "成员",
     "portal": "门户",
@@ -791,5 +792,50 @@
     "conversationFullNote": "这个会话已达到长度上限,下一条消息会开启新会话。",
     "conversationFullTitle": "会话已满",
     "startNewConversation": "开启新会话"
+  },
+  "help": {
+    "admin": {
+      "title": "帮助中心",
+      "statsEmpty": "还没有内容",
+      "stats": "{collections} 个分区 · {articles} 篇文章",
+      "new": "新建",
+      "newCollection": "新建分区",
+      "newCollectionHint": "把相关文章归到一组",
+      "newArticle": "新建文章",
+      "newArticleHint": "写一篇新的帮助文章",
+      "newArticleDisabledHint": "请先创建分区",
+      "viewCollections": "分区",
+      "viewArticles": "全部文章",
+      "searchPlaceholder": "搜索文章",
+      "hidden": "已隐藏",
+      "articleCount": "{n} 篇文章",
+      "emptyTitle": "先创建分区，再写第一篇文章",
+      "selected": "已选中 {n} 篇文章",
+      "clear": "清空",
+      "publish": "发布",
+      "unpublish": "撤下",
+      "publishResult": "已发布 {n} 篇文章",
+      "unpublishResult": "已撤下 {n} 篇文章",
+      "status": {
+        "draft": "草稿",
+        "published": "已发布",
+        "archived": "已归档"
+      },
+      "collection": {
+        "createTitle": "新建分区",
+        "editTitle": "编辑分区",
+        "icon": "图标",
+        "name": "名称",
+        "namePlaceholder": "例如：快速上手",
+        "nameRequired": "请填写分区名称",
+        "description": "描述",
+        "descriptionPlaceholder": "显示在分区名下方的一行说明",
+        "visible": "对读者可见",
+        "visibleHint": "关闭后，该分区及其下文章都不出现在门户。",
+        "delete": "删除分区",
+        "deleteConfirm": "删除该分区及其下所有文章？",
+        "saveFailed": "分区保存失败"
+      }
+    }
   }
 }

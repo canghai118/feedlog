@@ -43,6 +43,7 @@
     "feedback": "Feedback",
     "roadmap": "Roadmap",
     "changelog": "Changelog",
+    "helpCenter": "Help Center",
     "board": "Board",
     "members": "Members",
     "portal": "Portal",
@@ -791,5 +792,50 @@
     "conversationFullNote": "This conversation has reached its length limit. Your next message starts a new one.",
     "conversationFullTitle": "This conversation is full",
     "startNewConversation": "Start a new conversation"
+  },
+  "help": {
+    "admin": {
+      "title": "Help Center",
+      "statsEmpty": "No content yet",
+      "stats": "{collections} collections · {articles} articles",
+      "new": "New",
+      "newCollection": "New collection",
+      "newCollectionHint": "Group related articles",
+      "newArticle": "New article",
+      "newArticleHint": "Write a new help article",
+      "newArticleDisabledHint": "Create a collection first",
+      "viewCollections": "Collections",
+      "viewArticles": "All articles",
+      "searchPlaceholder": "Search articles",
+      "hidden": "Hidden",
+      "articleCount": "{n} articles",
+      "emptyTitle": "Create a collection, then write your first article",
+      "selected": "{n} articles selected",
+      "clear": "Clear",
+      "publish": "Publish",
+      "unpublish": "Unpublish",
+      "publishResult": "{n} articles published",
+      "unpublishResult": "{n} articles unpublished",
+      "status": {
+        "draft": "Draft",
+        "published": "Published",
+        "archived": "Archived"
+      },
+      "collection": {
+        "createTitle": "New collection",
+        "editTitle": "Edit collection",
+        "icon": "Icon",
+        "name": "Name",
+        "namePlaceholder": "e.g. Getting started",
+        "nameRequired": "Give the collection a name",
+        "description": "Description",
+        "descriptionPlaceholder": "One line shown under the name",
+        "visible": "Visible to readers",
+        "visibleHint": "When off, this collection and its articles stay hidden from the portal.",
+        "delete": "Delete collection",
+        "deleteConfirm": "Delete this collection and all its articles?",
+        "saveFailed": "Could not save the collection"
+      }
+    }
   }
 }
