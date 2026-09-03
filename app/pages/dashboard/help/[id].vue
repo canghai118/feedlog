@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { MdCatalog } from 'md-editor-v3'
 import { toast } from 'vue-sonner'
 import type { HelpArticleStatus, HelpCollectionIcon } from '#layers/feedlog/shared/constants/help'
 
@@ -42,6 +43,8 @@ const form = reactive({ title: '', description: '', content: '' })
 const saving = ref(false)
 const pickerOpen = ref(false)
 const previewOpen = ref(false)
+const previewEditorId = 'help-article-preview-overlay'
+const previewHeadings = computed(() => (form.content.match(/^#{2,3}\s+.+$/gm) ?? []).length)
 const leaveOpen = ref(false)
 let leaveResolve: ((go: boolean) => void) | null = null
 
@@ -118,6 +121,15 @@ function answerLeave(go: boolean) {
   leaveResolve?.(go)
   leaveResolve = null
 }
+
+function guardUnload(e: BeforeUnloadEvent) {
+  if (!dirty.value) return
+  e.preventDefault()
+  e.returnValue = ''
+}
+
+onMounted(() => window.addEventListener('beforeunload', guardUnload))
+onBeforeUnmount(() => window.removeEventListener('beforeunload', guardUnload))
 
 onBeforeRouteLeave(async () => {
   if (!dirty.value) return true
@@ -264,14 +276,24 @@ function goBack() {
           </button>
         </div>
         <div class="min-h-0 flex-1 overflow-auto px-8 pt-7">
-          <div class="mx-auto max-w-[720px]">
-            <h1 class="text-[32px] font-bold leading-10">{{ form.title }}</h1>
-            <p v-if="form.description" class="mt-3 text-base leading-6 text-muted-foreground">{{ form.description }}</p>
-            <div class="mt-6 border-t border-border pt-6">
+          <div class="grid items-start gap-10 [grid-template-columns:minmax(0,720px)_280px]">
+            <div>
+              <h1 class="mb-2.5 text-[30px] font-bold leading-[38px]! tracking-[-.02em]">{{ form.title }}</h1>
+              <p v-if="form.description" class="mb-5 text-base leading-[26px] text-muted-foreground">{{ form.description }}</p>
+              <hr class="mb-6 border-border">
               <ClientOnly>
-                <ThemedMdPreview :model-value="form.content" />
+                <ThemedMdPreview :editor-id="previewEditorId" :model-value="form.content" />
               </ClientOnly>
             </div>
+            <aside v-if="previewHeadings >= 2" class="sticky top-6">
+              <p class="mb-3 flex items-center gap-2 text-[13px] font-bold leading-[18px] text-muted-foreground">
+                <Icon name="lucide:list" size="15" />
+                {{ $t('help.portal.onThisPage') }}
+              </p>
+              <ClientOnly>
+                <MdCatalog :editor-id="previewEditorId" :scroll-element-offset-top="24" />
+              </ClientOnly>
+            </aside>
           </div>
         </div>
       </div>

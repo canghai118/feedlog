@@ -39,9 +39,14 @@ const editorId = 'help-article-preview'
 const catalogAnchor = ref<HTMLElement | null>(null)
 const headings = computed(() => (article.value?.content.match(/^#{2,3}\s+.+$/gm) ?? []).length)
 
+const anchorSeen = new Map<string, number>()
 const anchorId = (heading: { text?: string; index?: number }) => {
-  const slug = String(heading?.text ?? '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
-  return slug || `section-${heading?.index ?? 0}`
+  if (heading?.index === 0) anchorSeen.clear()
+  const base = String(heading?.text ?? '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+    || `section-${heading?.index ?? 0}`
+  const seen = anchorSeen.get(base) ?? 0
+  anchorSeen.set(base, seen + 1)
+  return seen ? `${base}-${seen + 1}` : base
 }
 
 function formatDate(iso: string) {
@@ -119,9 +124,7 @@ if (article.value) {
           <hr class="mb-6 border-border">
 
           <div ref="bodyRoot">
-            <ClientOnly>
-              <ThemedMdPreview :editor-id="editorId" :model-value="article.content" :md-heading-id="anchorId" />
-            </ClientOnly>
+            <ThemedMdPreview :editor-id="editorId" :model-value="article.content" :md-heading-id="anchorId" />
           </div>
 
           <div v-if="article.siblings.length" class="mt-6">

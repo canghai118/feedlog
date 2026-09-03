@@ -44,7 +44,7 @@ useRobotsRule(computed(() => (collections.value.length ? 'index, follow' : 'noin
           <input
             v-model="query"
             type="text"
-            class="h-[52px] w-full rounded-2xl border border-border bg-card px-[46px] text-sm outline-none focus:border-primary"
+            class="h-[52px] w-full rounded-2xl border border-border bg-card px-[46px] text-sm outline-none focus:border-primary focus:shadow-[0_4px_20px_rgba(196,90,70,.08)]"
             :placeholder="$t('help.portal.searchPlaceholder')"
           >
           <button v-if="query" type="button" class="absolute right-4 top-1/2 flex -translate-y-1/2 text-muted-foreground hover:text-foreground" @click="query = ''">

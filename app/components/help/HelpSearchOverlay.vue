@@ -54,9 +54,9 @@ function segments(text: string, ranges: [number, number][]) {
         v-for="hit in hits"
         :key="hit.shortId"
         :to="localePath(`/help/${hit.shortId}-${hit.slug}`)"
-        class="block cursor-pointer border-b border-border px-[18px] py-3 hover:bg-secondary"
+        class="group block cursor-pointer border-b border-border px-[18px] py-3 hover:bg-background"
       >
-        <div class="text-sm font-bold leading-5">
+        <div class="text-sm font-bold leading-5 group-hover:text-primary">
           <span v-for="(part, i) in segments(hit.title, hit.titleRanges)" :key="i" :class="part.hit && 'rounded-sm bg-primary/10 px-0.5 font-bold text-primary'">{{ part.text }}</span>
         </div>
         <div class="mt-1 line-clamp-2 text-xs leading-[18px] text-muted-foreground">
