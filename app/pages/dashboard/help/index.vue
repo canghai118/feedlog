@@ -152,14 +152,10 @@ function openEdit(collection: AdminCollection) {
   dialogOpen.value = true
 }
 
-async function createArticle() {
+function createArticle() {
   const collectionId = collections.value[0]?.id
   if (!collectionId) return
-  const created = await $fetch<{ id: string }>('/api/admin/help/articles', {
-    method: 'POST',
-    body: { collectionId, title: t('help.admin.newArticle'), content: '' },
-  })
-  await router.push(localePath(`/dashboard/help/${created.id}`))
+  return router.push({ path: localePath('/dashboard/help/new'), query: { collection: collectionId } })
 }
 
 async function onCollectionsDragEnd() {

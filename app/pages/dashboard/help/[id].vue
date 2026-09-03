@@ -31,14 +31,18 @@ const router = useRouter()
 const localePath = useLocalePath()
 
 const id = route.params.id as string
+const isNew = computed(() => id === 'new')
 
-const { data: article, refresh } = await useFetch<ArticleDetail>(`/api/admin/help/articles/${id}`)
+const { data: article, refresh } = await useFetch<ArticleDetail>(`/api/admin/help/articles/${id}`, {
+  immediate: !isNew.value,
+})
 const { data: collectionsData } = await useFetch<{ data: CollectionOption[] }>('/api/admin/help/collections', {
   query: { flat: 1 },
 })
 const collections = computed(() => collectionsData.value?.data ?? [])
 
 const form = reactive({ title: '', description: '', content: '' })
+const draftCollectionId = ref((route.query.collection as string | undefined) ?? '')
 const saving = ref(false)
 const pickerOpen = ref(false)
 const previewOpen = ref(false)
@@ -58,9 +62,15 @@ const dirty = computed(() =>
   || form.description !== (article.value?.description ?? '')
   || form.content !== (article.value?.content ?? ''))
 
-const collection = computed(() => article.value?.collection)
+const collection = computed(() => isNew.value
+  ? collections.value.find(c => c.id === draftCollectionId.value)
+  : article.value?.collection)
 const hiddenWarning = computed(() => article.value?.status === 'published' && collection.value && !collection.value.visible)
 const articleUrl = computed(() => article.value ? `/help/${article.value.shortId}-${article.value.slug}` : '')
+
+watch(collections, (list) => {
+  if (isNew.value && !draftCollectionId.value) draftCollectionId.value = list[0]?.id ?? ''
+}, { immediate: true })
 
 function formatStamp(iso: string | null | undefined) {
   if (!iso) return '—'
@@ -89,17 +99,42 @@ const contentBody = () => ({
   content: form.content,
 })
 
+async function create(publish: boolean) {
+  if (!draftCollectionId.value) return
+  saving.value = true
+  try {
+    const created = await $fetch<{ id: string }>('/api/admin/help/articles', {
+      method: 'POST',
+      body: { collectionId: draftCollectionId.value, ...contentBody(), publish },
+    })
+    toast.success(t('help.admin.editor.saved'))
+    await router.replace(localePath(`/dashboard/help/${created.id}`))
+  }
+  catch (e) {
+    toast.error((e as { data?: { message?: string } }).data?.message || t('help.admin.editor.saveFailed'))
+  }
+  finally {
+    saving.value = false
+  }
+}
+
 async function saveDraft() {
+  if (isNew.value) return create(false)
   if (await patch(contentBody())) toast.success(t('help.admin.editor.saved'))
 }
 
 async function togglePublish() {
+  if (isNew.value) return create(true)
   const next = article.value?.status === 'published' ? 'archived' : 'published'
   if (await patch({ ...contentBody(), status: next })) toast.success(t('help.admin.editor.saved'))
 }
 
 async function pickCollection(collectionId: string) {
   pickerOpen.value = false
+  if (isNew.value) {
+    draftCollectionId.value = collectionId
+    return
+  }
   if (collectionId !== collection.value?.id) await patch({ collectionId })
 }
 
@@ -119,8 +154,9 @@ function answerLeave(go: boolean) {
   leaveResolve = null
 }
 
-onBeforeRouteLeave(async () => {
-  if (!dirty.value) return true
+onBeforeRouteLeave(async (to) => {
+  if (to.path.endsWith(`/dashboard/help/${article.value?.id ?? ''}`)) return true
+  if (!dirty.value && !(isNew.value && (form.title || form.content))) return true
   return await confirmLeave()
 })
 
@@ -130,7 +166,7 @@ function goBack() {
 </script>
 
 <template>
-  <div v-if="article" class="flex h-full min-h-0 flex-col">
+  <div v-if="article || isNew" class="flex h-full min-h-0 flex-col">
     <header class="flex h-16 shrink-0 items-center justify-between border-b border-border bg-card px-6">
       <div class="flex items-center gap-4">
         <button type="button" data-testid="help-editor-back" class="inline-flex items-center gap-2 text-xs font-bold text-muted-foreground hover:text-foreground" @click="goBack">
@@ -138,14 +174,16 @@ function goBack() {
           {{ $t('help.admin.editor.back') }}
         </button>
         <div class="h-4 w-px bg-border" />
-        <span class="inline-flex shrink-0 items-center rounded border px-2 py-0.5 text-[10px] font-bold leading-[15px]"
+        <span v-if="article" class="inline-flex shrink-0 items-center rounded border px-2 py-0.5 text-[10px] font-bold leading-[15px]"
               :class="article.status === 'published' ? 'text-[#22c55e] bg-[rgba(34,197,94,.1)] border-[rgba(34,197,94,.2)]'
                 : article.status === 'archived' ? 'text-[#8D6E52] bg-[rgba(141,110,82,.10)] border-[rgba(141,110,82,.22)]'
                   : 'text-[#9ca3af] bg-[rgba(156,163,175,.1)] border-[rgba(156,163,175,.2)]'">
           {{ $t(`help.admin.status.${article.status}`) }}
         </span>
         <span class="text-xs" :class="dirty ? 'font-bold text-[var(--accent)]' : 'font-medium text-muted-foreground'">
-          {{ dirty ? $t('help.admin.editor.unsaved') : $t('help.admin.editor.lastSaved', { at: formatStamp(article.updatedAt) }) }}
+          {{ isNew
+            ? $t('help.admin.editor.notSaved')
+            : dirty ? $t('help.admin.editor.unsaved') : $t('help.admin.editor.lastSaved', { at: formatStamp(article!.updatedAt) }) }}
         </span>
       </div>
 
@@ -159,7 +197,7 @@ function goBack() {
           {{ $t('help.admin.editor.saveDraft') }}
         </button>
         <button type="button" class="inline-flex h-9 items-center rounded-2xl border border-primary bg-primary px-4 text-xs font-bold text-primary-foreground hover:bg-primary/90 disabled:opacity-50" :disabled="saving" @click="togglePublish">
-          {{ article.status === 'published' ? $t('help.admin.unpublish') : $t('help.admin.publish') }}
+          {{ article?.status === 'published' ? $t('help.admin.unpublish') : $t('help.admin.publish') }}
         </button>
       </div>
     </header>
@@ -167,7 +205,7 @@ function goBack() {
     <div class="flex min-h-0 flex-1 overflow-hidden">
       <div class="min-w-0 flex-1 overflow-auto px-10 py-8">
         <div class="mx-auto max-w-[720px]">
-          <div v-if="hiddenWarning" class="mb-[18px] flex gap-2 rounded-lg border border-[rgba(230,121,99,.25)] bg-[rgba(230,121,99,.08)] px-3 py-2.5">
+          <div v-if="hiddenWarning && article" class="mb-[18px] flex gap-2 rounded-lg border border-[rgba(230,121,99,.25)] bg-[rgba(230,121,99,.08)] px-3 py-2.5">
             <span class="flex shrink-0 text-accent"><Icon name="lucide:circle-question-mark" size="15" /></span>
             <span class="text-xs leading-[17px]">{{ $t('help.admin.editor.hiddenWarning', { name: collection?.name }) }}</span>
           </div>
@@ -233,16 +271,17 @@ function goBack() {
           <p class="mb-1.5 text-[11px] font-bold uppercase leading-[17px] tracking-[.05em] text-muted-foreground">{{ $t('help.admin.editor.details') }}</p>
           <div class="flex justify-between py-1 text-xs">
             <span class="text-muted-foreground">{{ $t('help.admin.editor.created') }}</span>
-            <b>{{ formatStamp(article.createdAt) }}</b>
+            <b>{{ isNew ? '—' : formatStamp(article!.createdAt) }}</b>
           </div>
           <div class="flex justify-between py-1 text-xs">
             <span class="text-muted-foreground">{{ $t('help.admin.editor.updated') }}</span>
-            <b>{{ formatStamp(article.updatedAt) }}</b>
+            <b>{{ isNew ? '—' : formatStamp(article!.updatedAt) }}</b>
           </div>
           <div class="mt-2.5 flex justify-between py-1 text-xs">
             <span class="text-muted-foreground">{{ $t('help.admin.editor.articleUrl') }}</span>
           </div>
-          <div class="mt-1.5 flex items-center gap-1.5 rounded-lg border border-border bg-background px-2 py-1.5">
+          <p v-if="isNew" class="mt-1.5 text-[11px] leading-4 text-muted-foreground">{{ $t('help.admin.editor.urlPending') }}</p>
+          <div v-else class="mt-1.5 flex items-center gap-1.5 rounded-lg border border-border bg-background px-2 py-1.5">
             <code class="min-w-0 flex-1 truncate text-[11px]">{{ articleUrl }}</code>
             <button type="button" class="flex h-6 w-6 shrink-0 items-center justify-center rounded text-muted-foreground hover:bg-secondary hover:text-foreground" @click="copyUrl">
               <Icon name="lucide:link" size="13" />
