@@ -758,7 +758,10 @@
     "changelogTitle": "{name} 更新日志",
     "postFallback": "反馈",
     "changelogFallback": "更新日志",
-    "titleWithOrg": "{title} - {name}"
+    "titleWithOrg": "{title} - {name}",
+    "helpTitle": "{name} 帮助中心",
+    "helpTitleWithOrg": "{title} {'|'} {name} 帮助中心",
+    "helpFallback": "帮助中心"
   },
   "widget": {
     "title": "反馈",

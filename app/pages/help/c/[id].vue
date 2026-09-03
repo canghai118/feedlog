@@ -8,7 +8,6 @@ interface CollectionPage {
 
 const route = useRoute()
 const localePath = useLocalePath()
-const { t } = useI18n()
 
 const { data, error } = await useFetch<CollectionPage>(`/api/help/collections/${route.params.id}`)
 
@@ -19,8 +18,7 @@ if (error.value) {
 const collection = computed(() => data.value?.collection)
 const articles = computed(() => data.value?.articles ?? [])
 
-const orgName = usePortalOrg().value.name
-useHead({ titleTemplate: '%s', title: computed(() => `${collection.value?.name ?? t('help.portal.back')} | ${orgName} Help Center`) })
+usePageOg({ kind: 'helpCollection', title: () => collection.value?.name, description: () => collection.value?.description })
 useRobotsRule(computed(() => (articles.value.length ? 'index, follow' : 'noindex')))
 
 function formatDate(iso: string) {

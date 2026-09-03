@@ -17,7 +17,6 @@ interface ArticlePage {
 const route = useRoute()
 const localePath = useLocalePath()
 const { t, locale } = useI18n()
-const portalOrg = usePortalOrg()
 
 const segment = String(route.params.slug ?? '')
 const shortId = segment.split('-')[0] ?? ''
@@ -67,14 +66,12 @@ function mountAnchors() {
 onMounted(() => nextTick(mountAnchors))
 watch(() => article.value?.content, () => nextTick(mountAnchors))
 
-const orgName = computed(() => portalOrg.value.name)
-
-useHead({
-  titleTemplate: '%s',
-  title: computed(() => (article.value ? `${article.value.title} | ${orgName.value} Help Center` : t('help.portal.notFoundTitle'))),
-  meta: computed(() => (article.value
-    ? [{ name: 'description', content: article.value.description || generateExcerpt(article.value.content, 155) }]
-    : [])),
+usePageOg({
+  kind: 'helpArticle',
+  title: () => article.value?.title,
+  description: () => article.value?.description,
+  content: () => article.value?.content,
+  publishedAt: () => article.value?.publishedAt ?? undefined,
 })
 useRobotsRule(computed(() => (article.value ? 'index, follow' : 'noindex')))
 

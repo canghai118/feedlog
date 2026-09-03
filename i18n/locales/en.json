@@ -758,7 +758,10 @@
     "changelogTitle": "{name} Changelog",
     "postFallback": "Feedback",
     "changelogFallback": "Changelog",
-    "titleWithOrg": "{title} - {name}"
+    "titleWithOrg": "{title} - {name}",
+    "helpTitle": "{name} Help Center",
+    "helpTitleWithOrg": "{title} {'|'} {name} Help Center",
+    "helpFallback": "Help Center"
   },
   "widget": {
     "title": "Feedback",

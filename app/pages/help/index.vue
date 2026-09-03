@@ -10,14 +10,13 @@ interface PortalCollection {
 }
 
 const localePath = useLocalePath()
-const portalOrg = usePortalOrg().value
 
 const { data } = await useFetch<{ data: PortalCollection[] }>('/api/help/collections')
 const collections = computed(() => data.value?.data ?? [])
 
 const query = ref('')
 
-useHead({ titleTemplate: '%s', title: `${portalOrg.name} Help Center` })
+usePageOg({ kind: 'helpHome' })
 useRobotsRule(computed(() => (collections.value.length ? 'index, follow' : 'noindex')))
 </script>
 
