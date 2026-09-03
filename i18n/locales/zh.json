@@ -652,7 +652,12 @@
       "descriptionLabel": "描述",
       "descriptionPlaceholder": "欢迎提交任何 bug 反馈和功能建议……",
       "loadingEditor": "编辑器加载中……",
-      "descriptionHint": "显示在标题下方,为访客提供更多背景信息。支持 Markdown。"
+      "descriptionHint": "显示在标题下方,为访客提供更多背景信息。支持 Markdown。",
+      "modulesSection": "门户模块",
+      "modulesDesc": "每个模块都可以显示或隐藏。隐藏后，它的导航入口消失、页面无法访问，但内容与发布状态不受影响。",
+      "moduleHelpCenter": "帮助中心",
+      "moduleHelpCenterOn": "在门户导航中显示帮助中心，允许打开与搜索其中的文章。",
+      "moduleHelpCenterEmpty": "请先创建分区——目前还没有可展示的内容。"
     },
     "members": {
       "title": "成员",

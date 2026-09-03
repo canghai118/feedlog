@@ -52,11 +52,15 @@ function onChangePassword() {
   showChangePassword.value = true
 }
 
-const navItems = [
+const portalOrg = usePortalOrg()
+const navItems = computed(() => [
   { key: 'nav.feedback', to: '/', icon: 'lucide:message-square' },
   { key: 'nav.roadmap', to: '/roadmap', icon: 'lucide:map' },
   { key: 'nav.changelog', to: '/changelog', icon: 'lucide:newspaper' },
-]
+  ...(portalOrg.value.modules.helpCenter
+    ? [{ key: 'nav.helpCenter', to: '/help', icon: 'lucide:book-open' }]
+    : []),
+])
 
 async function handleSignOut() {
   await signOut()

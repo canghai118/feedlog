@@ -652,7 +652,12 @@
       "descriptionLabel": "Description",
       "descriptionPlaceholder": "Any bug reports and feature requests are welcome...",
       "loadingEditor": "Loading editor...",
-      "descriptionHint": "Shown below the title to provide more context for visitors. Markdown supported."
+      "descriptionHint": "Shown below the title to provide more context for visitors. Markdown supported.",
+      "modulesSection": "Modules on the portal",
+      "modulesDesc": "Each module can be shown or hidden. Hiding one removes its nav entry and makes its pages unreachable — content and publish states are untouched.",
+      "moduleHelpCenter": "Help Center",
+      "moduleHelpCenterOn": "Show the help center in the portal nav, and let its articles be opened and searched.",
+      "moduleHelpCenterEmpty": "Create a collection first — there is nothing to show yet."
     },
     "members": {
       "title": "Members",
