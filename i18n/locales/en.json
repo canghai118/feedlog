@@ -874,6 +874,30 @@
         "saveFailed": "Could not save the article",
         "saved": "Saved"
       }
+    },
+    "portal": {
+      "heading": "How can we help?",
+      "subheading": "Search the help center, or browse the collections below",
+      "searchPlaceholder": "Search articles...",
+      "results": "{n} result | {n} results",
+      "more": "{n} more — keep typing to narrow it down",
+      "noMatch": "No articles matched",
+      "noMatchHint": "Try a different keyword, or browse the collections below",
+      "emptyTitle": "No articles yet",
+      "emptyHint": "This help center has nothing to read just yet. Check back soon.",
+      "collectionEmptyTitle": "No articles here yet",
+      "collectionEmptyHint": "This collection has nothing to read just yet. Check back soon.",
+      "articleCount": "{n} article | {n} articles",
+      "back": "Help Center",
+      "updated": "Updated {at}",
+      "lastUpdated": "Last updated",
+      "onThisPage": "On this page",
+      "moreIn": "More in {name}",
+      "notFoundTitle": "404 — Article not found",
+      "notFoundHint": "This article is not published, or the link is wrong.",
+      "goneTitle": "410 — Article no longer available",
+      "goneHint": "This article has been unpublished.",
+      "backToHelp": "Back to Help Center"
     }
   }
 }
