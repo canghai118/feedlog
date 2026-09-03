@@ -39,7 +39,10 @@ const editorId = 'help-article-preview'
 const catalogAnchor = ref<HTMLElement | null>(null)
 const headings = computed(() => (article.value?.content.match(/^#{2,3}\s+.+$/gm) ?? []).length)
 
-const anchorId = (text: string) => String(text || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+const anchorId = (heading: { text?: string; index?: number }) => {
+  const slug = String(heading?.text ?? '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+  return slug || `section-${heading?.index ?? 0}`
+}
 
 function formatDate(iso: string) {
   return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date(iso))
