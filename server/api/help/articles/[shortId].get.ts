@@ -27,11 +27,8 @@ export default defineEventHandler(async (event) => {
     .where(and(eq(helpArticle.orgId, orgId), eq(helpArticle.shortId, shortId)))
     .limit(1)
 
-  if (!row || !row.collectionVisible || row.status === 'draft') {
+  if (!row || !row.collectionVisible || row.status !== 'published') {
     throw createError({ statusCode: 404, message: 'Not found' })
-  }
-  if (row.status === 'archived') {
-    throw createError({ statusCode: 410, message: 'Gone' })
   }
 
   const siblings = await db

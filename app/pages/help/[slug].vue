@@ -16,17 +16,15 @@ interface ArticlePage {
 
 const route = useRoute()
 const localePath = useLocalePath()
-const { t, locale } = useI18n()
+const { t } = useI18n()
 
 const segment = String(route.params.slug ?? '')
 const shortId = segment.split('-')[0] ?? ''
 
 const { data, error } = await useFetch<ArticlePage>(`/api/help/articles/${shortId}`)
 
-const gone = computed(() => error.value?.statusCode === 410)
-
 if (import.meta.server && error.value) {
-  setResponseStatus(useRequestEvent()!, gone.value ? 410 : 404)
+  setResponseStatus(useRequestEvent()!, 404)
 }
 
 const article = computed(() => data.value)
@@ -83,24 +81,6 @@ usePageOg({
 })
 useRobotsRule(computed(() => (article.value ? 'index, follow' : 'noindex')))
 
-if (article.value) {
-  useSchemaOrg([
-    defineArticle({
-      headline: article.value.title,
-      description: article.value.description ?? undefined,
-      datePublished: article.value.publishedAt ?? undefined,
-      dateModified: article.value.updatedAt,
-      inLanguage: locale.value === 'zh' ? 'zh-CN' : 'en-US',
-    }),
-    defineBreadcrumb({
-      itemListElement: [
-        { name: t('help.portal.back'), item: '/help' },
-        { name: article.value.collection.name, item: `/help/c/${article.value.collection.id}` },
-        { name: article.value.title },
-      ],
-    }),
-  ])
-}
 </script>
 
 <template>
@@ -166,8 +146,8 @@ if (article.value) {
         <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-border bg-background text-muted-foreground">
           <Icon name="lucide:file-text" size="26" />
         </div>
-        <p class="text-xl font-bold leading-7">{{ gone ? $t('help.portal.goneTitle') : $t('help.portal.notFoundTitle') }}</p>
-        <p class="mt-2 text-sm leading-[22px] text-muted-foreground">{{ gone ? $t('help.portal.goneHint') : $t('help.portal.notFoundHint') }}</p>
+        <p class="text-xl font-bold leading-7">{{ $t('help.portal.notFoundTitle') }}</p>
+        <p class="mt-2 text-sm leading-[22px] text-muted-foreground">{{ $t('help.portal.notFoundHint') }}</p>
         <NuxtLink :to="localePath('/help')" class="mt-[22px] inline-flex h-9 items-center rounded-2xl bg-primary px-4 text-xs font-bold text-primary-foreground hover:bg-primary/90">
           {{ $t('help.portal.backToHelp') }}
         </NuxtLink>

@@ -19,7 +19,6 @@ const collection = computed(() => data.value?.collection)
 const articles = computed(() => data.value?.articles ?? [])
 
 usePageOg({ kind: 'helpCollection', title: () => collection.value?.name, description: () => collection.value?.description })
-useRobotsRule(computed(() => (articles.value.length ? 'index, follow' : 'noindex')))
 
 function formatDate(iso: string) {
   return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date(iso))

@@ -17,7 +17,6 @@ const collections = computed(() => data.value?.data ?? [])
 const query = ref('')
 
 usePageOg({ kind: 'helpHome' })
-useRobotsRule(computed(() => (collections.value.length ? 'index, follow' : 'noindex')))
 </script>
 
 <template>

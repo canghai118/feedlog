@@ -899,8 +899,6 @@
       "moreIn": "More in {name}",
       "notFoundTitle": "404 — Article not found",
       "notFoundHint": "This article is not published, or the link is wrong.",
-      "goneTitle": "410 — Article no longer available",
-      "goneHint": "This article has been unpublished.",
       "backToHelp": "Back to Help Center"
     }
   }
