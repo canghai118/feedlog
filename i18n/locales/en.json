@@ -841,8 +841,9 @@
         "visible": "Visible to readers",
         "visibleHint": "When off, this collection and its articles stay hidden from the portal.",
         "delete": "Delete collection",
-        "deleteConfirm": "Delete this collection and all its articles?",
-        "saveFailed": "Could not save the collection"
+        "saveFailed": "Could not save the collection",
+        "deleteTitle": "Delete \"{name}\"?",
+        "deleteDescription": "The collection is deleted. This cannot be undone. | The collection and the 1 article in it are deleted. This cannot be undone. | The collection and all {n} articles in it are deleted. This cannot be undone."
       },
       "emptyHeading": "Nothing here yet",
       "emptyAction": "Create a collection",

@@ -147,6 +147,7 @@ function openEdit(collection: AdminCollection) {
     description: collection.description,
     icon: collection.icon,
     visible: collection.visible,
+    articleCount: collection.articleCount,
   }
   dialogOpen.value = true
 }

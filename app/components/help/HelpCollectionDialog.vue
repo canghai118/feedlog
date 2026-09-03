@@ -8,6 +8,7 @@ export interface HelpCollectionFormValue {
   description: string | null
   icon: HelpCollectionIcon
   visible: boolean
+  articleCount: number
 }
 
 const props = defineProps<{ collection?: HelpCollectionFormValue | null }>()
@@ -16,6 +17,7 @@ const emit = defineEmits<{ saved: []; deleted: [] }>()
 const open = defineModel<boolean>('open', { default: false })
 
 const { t } = useI18n()
+const { confirm } = useConfirmDialog()
 
 const isEdit = computed(() => !!props.collection)
 const icon = ref<HelpCollectionIcon>(HELP_COLLECTION_ICON_DEFAULT)
@@ -64,7 +66,17 @@ async function handleSave() {
 }
 
 async function handleDelete() {
-  if (!props.collection || !confirm(t('help.admin.collection.deleteConfirm'))) return
+  if (!props.collection) return
+
+  const count = props.collection.articleCount
+  const ok = await confirm({
+    title: t('help.admin.collection.deleteTitle', { name: props.collection.name }),
+    description: t('help.admin.collection.deleteDescription', { n: count }, count),
+    confirmText: t('common.delete'),
+    cancelText: t('common.cancel'),
+    variant: 'destructive',
+  })
+  if (!ok) return
 
   submitting.value = true
   try {

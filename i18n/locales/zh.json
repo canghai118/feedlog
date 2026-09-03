@@ -841,8 +841,9 @@
         "visible": "对读者可见",
         "visibleHint": "关闭后，该分区及其下文章都不出现在门户。",
         "delete": "删除分区",
-        "deleteConfirm": "删除该分区及其下所有文章？",
-        "saveFailed": "分区保存失败"
+        "saveFailed": "分区保存失败",
+        "deleteTitle": "删除「{name}」？",
+        "deleteDescription": "该分区将被删除，且无法撤销。 | 该分区及其下 1 篇文章将被一并删除，且无法撤销。 | 该分区及其下全部 {n} 篇文章将被一并删除，且无法撤销。"
       },
       "emptyHeading": "这里还什么都没有",
       "emptyAction": "创建分区",
