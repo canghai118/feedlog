@@ -806,11 +806,11 @@
       "newArticleDisabledHint": "请先创建分区",
       "viewCollections": "分区",
       "viewArticles": "全部文章",
-      "searchPlaceholder": "搜索文章",
+      "searchPlaceholder": "搜索文章标题",
       "hidden": "已隐藏",
-      "articleCount": "{n} 篇文章",
-      "emptyTitle": "先创建分区，再写第一篇文章",
-      "selected": "已选中 {n} 篇文章",
+      "articleCount": "{n} 篇文章 | {n} 篇文章",
+      "emptyTitle": "先创建分区，再写第一篇文章。",
+      "selected": "已选中 {n} 篇文章 | 已选中 {n} 篇文章",
       "clear": "清空",
       "publish": "发布",
       "unpublish": "撤下",
@@ -835,7 +835,11 @@
         "delete": "删除分区",
         "deleteConfirm": "删除该分区及其下所有文章？",
         "saveFailed": "分区保存失败"
-      }
+      },
+      "emptyHeading": "这里还什么都没有",
+      "emptyAction": "创建分区",
+      "noMatch": "没有匹配的文章",
+      "showing": "显示第 {from} 至 {to} 条，共 {total} 条"
     }
   }
 }

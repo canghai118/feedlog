@@ -806,11 +806,11 @@
       "newArticleDisabledHint": "Create a collection first",
       "viewCollections": "Collections",
       "viewArticles": "All articles",
-      "searchPlaceholder": "Search articles",
+      "searchPlaceholder": "Search article titles",
       "hidden": "Hidden",
-      "articleCount": "{n} articles",
-      "emptyTitle": "Create a collection, then write your first article",
-      "selected": "{n} articles selected",
+      "articleCount": "{n} article | {n} articles",
+      "emptyTitle": "Create a collection, then write your first article.",
+      "selected": "{n} article selected | {n} articles selected",
       "clear": "Clear",
       "publish": "Publish",
       "unpublish": "Unpublish",
@@ -835,7 +835,11 @@
         "delete": "Delete collection",
         "deleteConfirm": "Delete this collection and all its articles?",
         "saveFailed": "Could not save the collection"
-      }
+      },
+      "emptyHeading": "Nothing here yet",
+      "emptyAction": "Create a collection",
+      "noMatch": "No articles matched",
+      "showing": "Showing {from} to {to} of {total} entries"
     }
   }
 }

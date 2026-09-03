@@ -187,11 +187,17 @@ async function runBulk(action: 'publish' | 'unpublish') {
   toast.success(t(`help.admin.${action}Result`, { n: result.affected }))
 }
 
+const BADGE = 'inline-flex shrink-0 items-center rounded border px-2 py-0.5 text-[10px] font-bold leading-[15px]'
+const BADGE_DRAFT = 'text-[#9ca3af] bg-[rgba(156,163,175,.1)] border-[rgba(156,163,175,.2)]'
+
 function statusClass(status: HelpArticleStatus) {
-  if (status === 'published') return 'border-success/40 text-success'
-  if (status === 'archived') return 'border-amber-700/40 text-amber-700'
-  return 'border-border text-muted-foreground'
+  if (status === 'published') return 'text-[#22c55e] bg-[rgba(34,197,94,.1)] border-[rgba(34,197,94,.2)]'
+  if (status === 'archived') return 'text-[#8D6E52] bg-[rgba(141,110,82,.10)] border-[rgba(141,110,82,.22)]'
+  return BADGE_DRAFT
 }
+
+const rangeFrom = computed(() => (total.value === 0 ? 0 : (page.value - 1) * PAGE_SIZE + 1))
+const rangeTo = computed(() => Math.min(page.value * PAGE_SIZE, total.value))
 
 function formatDate(iso: string) {
   return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date(iso))
@@ -215,7 +221,7 @@ function formatDate(iso: string) {
         <DropdownMenuTrigger as-child>
           <button
             type="button"
-            class="inline-flex h-9 items-center justify-center gap-1.5 rounded-md bg-primary px-4 text-xs font-bold text-primary-foreground hover:bg-primary/90"
+            class="inline-flex h-9 items-center justify-center gap-1.5 rounded-lg bg-primary px-4 text-xs font-bold text-primary-foreground hover:bg-primary/90"
           >
             <Icon name="lucide:plus" size="16" />
             {{ $t('help.admin.new') }}
@@ -240,25 +246,25 @@ function formatDate(iso: string) {
       </DropdownMenu>
     </header>
 
-    <div v-if="!isEmpty" class="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-border px-6 py-4">
+    <div v-if="!isEmpty" class="flex shrink-0 items-center justify-between gap-3 border-b border-border bg-background/30 px-6 py-4">
       <template v-if="selected.size">
         <div class="flex items-center gap-3">
-          <span class="text-xs font-bold">{{ $t('help.admin.selected', { n: selected.size }) }}</span>
-          <button type="button" class="text-xs font-medium text-muted-foreground hover:text-foreground" @click="selected = new Set()">
+          <span class="text-[13px] font-bold leading-[18px]">{{ $t('help.admin.selected', { n: selected.size }, selected.size) }}</span>
+          <button type="button" class="text-xs font-bold text-muted-foreground hover:text-foreground" @click="selected = new Set()">
             {{ $t('help.admin.clear') }}
           </button>
         </div>
         <div class="flex items-center gap-2">
           <button
             type="button"
-            class="inline-flex h-8 items-center rounded-md border border-border px-3 text-xs font-bold hover:bg-secondary"
+            class="inline-flex h-8 items-center rounded-lg border border-border px-3 text-xs font-bold hover:bg-secondary"
             @click="runBulk('unpublish')"
           >
             {{ $t('help.admin.unpublish') }}
           </button>
           <button
             type="button"
-            class="inline-flex h-8 items-center rounded-md bg-primary px-3 text-xs font-bold text-primary-foreground hover:bg-primary/90"
+            class="inline-flex h-8 items-center rounded-lg bg-primary px-3 text-xs font-bold text-primary-foreground hover:bg-primary/90"
             @click="runBulk('publish')"
           >
             {{ $t('help.admin.publish') }}
@@ -267,176 +273,213 @@ function formatDate(iso: string) {
       </template>
 
       <template v-else>
-        <div class="inline-flex rounded-md border border-border p-0.5">
+        <div class="flex items-center gap-1 rounded-2xl bg-secondary p-[3px]">
           <button
             v-for="option in (['collections', 'articles'] as const)"
             :key="option"
             type="button"
-            class="h-7 rounded px-3 text-xs font-bold transition-colors"
-            :class="view === option ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'"
+            class="h-[26px] rounded-lg px-3 text-xs font-bold leading-4 transition-colors"
+            :class="view === option ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'"
             @click="view = option"
           >
             {{ option === 'collections' ? $t('help.admin.viewCollections') : $t('help.admin.viewArticles') }}
           </button>
         </div>
-        <div class="relative w-full sm:w-64">
-          <Icon name="lucide:search" size="14" class="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+        <div class="relative flex w-64 items-center text-muted-foreground">
+          <Icon name="lucide:search" size="14" class="absolute left-3" />
           <input
             v-model="search"
             type="text"
-            class="h-9 w-full rounded-md border border-border bg-background pl-9 pr-3 text-sm outline-none focus:border-primary"
+            class="h-9 w-full rounded-lg border border-border bg-card pl-9 pr-8 text-[13px] text-foreground outline-none focus:border-primary"
             :placeholder="$t('help.admin.searchPlaceholder')"
           >
+          <button v-if="search" type="button" class="absolute right-2.5 flex hover:text-foreground" @click="search = ''">
+            <Icon name="lucide:x" size="13" />
+          </button>
         </div>
       </template>
     </div>
 
-    <div class="min-h-0 flex-1 overflow-y-auto px-6 py-4">
-      <div v-if="isEmpty" class="flex flex-col items-center justify-center py-24 text-center">
-        <Icon name="lucide:book-open" size="40" class="text-muted-foreground/40" />
-        <p class="mt-4 text-sm font-medium text-muted-foreground">{{ $t('help.admin.emptyTitle') }}</p>
+    <div v-if="isEmpty" class="grid flex-1 place-items-center bg-card p-10">
+      <div class="max-w-[460px] text-center">
+        <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-secondary text-primary">
+          <Icon name="lucide:book-open" size="26" />
+        </div>
+        <p class="text-lg font-bold leading-[26px]">{{ $t('help.admin.emptyHeading') }}</p>
+        <p class="mt-2 text-sm leading-[22px] text-muted-foreground">{{ $t('help.admin.emptyTitle') }}</p>
         <button
           type="button"
-          class="mt-5 inline-flex h-9 items-center gap-1.5 rounded-md bg-primary px-4 text-xs font-bold text-primary-foreground hover:bg-primary/90"
+          class="mt-[22px] inline-flex h-9 items-center rounded-lg bg-primary px-4 text-xs font-bold text-primary-foreground hover:bg-primary/90"
           @click="openCreate"
         >
-          <Icon name="lucide:plus" size="16" />
-          {{ $t('help.admin.newCollection') }}
-        </button>
-      </div>
-
-      <template v-else-if="flat">
-        <NuxtLink
-          v-for="article in articles"
-          :key="article.id"
-          :to="localePath(`/dashboard/help/${article.id}`)"
-          class="group mb-1.5 flex items-center gap-3 rounded-lg border border-border bg-card px-3 py-2.5 transition-colors hover:border-primary/40"
-          :class="selected.has(article.id) && 'bg-primary/5'"
-        >
-          <button
-            type="button"
-            class="flex h-4 w-4 shrink-0 items-center justify-center rounded border transition-opacity"
-            :class="selected.has(article.id) ? 'border-primary bg-primary text-primary-foreground' : 'border-border opacity-0 group-hover:opacity-100'"
-            @click.prevent.stop="toggleSelected(article.id)"
-          >
-            <Icon v-if="selected.has(article.id)" name="lucide:check" size="12" />
-          </button>
-          <span class="w-5 shrink-0" />
-          <span class="min-w-0 flex-1 truncate text-sm font-medium">{{ article.title }}</span>
-          <span class="inline-flex shrink-0 items-center gap-1 rounded-full bg-background px-2 py-0.5 text-[11px] font-bold text-muted-foreground">
-            <Icon v-if="!article.collection.visible" name="lucide:eye-off" size="11" />
-            {{ article.collection.name }}
-          </span>
-          <span class="shrink-0 rounded-full border px-2 py-0.5 text-[11px] font-bold" :class="statusClass(article.status)">
-            {{ $t(`help.admin.status.${article.status}`) }}
-          </span>
-          <span class="w-28 shrink-0 text-right text-xs text-muted-foreground">{{ formatDate(article.updatedAt) }}</span>
-        </NuxtLink>
-      </template>
-
-      <ClientOnly v-else>
-        <draggable
-          v-model="draggableCollections"
-          item-key="id"
-          handle=".drag-handle"
-          ghost-class="opacity-50"
-          @start="expanded = new Set()"
-          @end="onCollectionsDragEnd"
-        >
-          <template #item="{ element: collection }">
-            <div class="mb-1.5">
-              <div
-                class="group flex cursor-pointer items-center gap-3 rounded-lg border border-border bg-card px-3 py-2.5 transition-colors hover:border-primary/40"
-                @click="toggleExpanded(collection.id)"
-              >
-                <button
-                  type="button"
-                  class="flex h-4 w-4 shrink-0 items-center justify-center rounded border transition-opacity"
-                  :class="collectionSelection(collection) !== 'none'
-                    ? 'border-primary bg-primary text-primary-foreground'
-                    : 'border-border opacity-0 group-hover:opacity-100'"
-                  @click.stop="toggleCollectionSelection(collection)"
-                >
-                  <Icon v-if="collectionSelection(collection) === 'all'" name="lucide:check" size="12" />
-                  <Icon v-else-if="collectionSelection(collection) === 'some'" name="lucide:minus" size="12" />
-                </button>
-                <div class="drag-handle w-5 shrink-0 cursor-grab text-muted-foreground/40 opacity-0 group-hover:opacity-100" @click.stop>
-                  <Icon name="lucide:grip-vertical" size="16" />
-                </div>
-                <Icon
-                  name="lucide:chevron-right"
-                  size="16"
-                  class="shrink-0 text-muted-foreground transition-transform"
-                  :class="expanded.has(collection.id) && 'rotate-90'"
-                />
-                <Icon :name="`lucide:${collection.icon}`" size="16" class="shrink-0 text-muted-foreground" />
-                <span class="shrink-0 text-sm font-bold">{{ collection.name }}</span>
-                <span class="min-w-0 flex-1 truncate text-xs text-muted-foreground">{{ collection.description }}</span>
-                <span v-if="!collection.visible" class="shrink-0 rounded-full border border-border px-2 py-0.5 text-[11px] font-bold text-muted-foreground">
-                  {{ $t('help.admin.hidden') }}
-                </span>
-                <span class="shrink-0 text-xs text-muted-foreground">{{ $t('help.admin.articleCount', { n: collection.articleCount }) }}</span>
-                <button
-                  type="button"
-                  class="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-muted-foreground hover:bg-secondary hover:text-foreground"
-                  @click.stop="openEdit(collection)"
-                >
-                  <Icon name="lucide:ellipsis" size="16" />
-                </button>
-              </div>
-
-              <draggable
-                v-if="expanded.has(collection.id)"
-                v-model="collection.articles"
-                item-key="id"
-                handle=".drag-handle"
-                ghost-class="opacity-50"
-                class="mt-1.5"
-                @end="onArticlesDragEnd(collection)"
-              >
-                <template #item="{ element: article }">
-                  <NuxtLink
-                    :to="localePath(`/dashboard/help/${article.id}`)"
-                    class="group mb-1.5 ml-9 flex items-center gap-3 rounded-lg border border-border bg-background px-3 py-2 transition-colors hover:border-primary/40"
-                    :class="selected.has(article.id) && 'bg-primary/5'"
-                  >
-                    <button
-                      type="button"
-                      class="flex h-4 w-4 shrink-0 items-center justify-center rounded border transition-opacity"
-                      :class="selected.has(article.id) ? 'border-primary bg-primary text-primary-foreground' : 'border-border opacity-0 group-hover:opacity-100'"
-                      @click.prevent.stop="toggleSelected(article.id)"
-                    >
-                      <Icon v-if="selected.has(article.id)" name="lucide:check" size="12" />
-                    </button>
-                    <div class="drag-handle w-5 shrink-0 cursor-grab text-muted-foreground/40 opacity-0 group-hover:opacity-100" @click.prevent.stop>
-                      <Icon name="lucide:grip-vertical" size="16" />
-                    </div>
-                    <span class="min-w-0 flex-1 truncate text-sm font-medium">{{ article.title }}</span>
-                    <span class="shrink-0 rounded-full border px-2 py-0.5 text-[11px] font-bold" :class="statusClass(article.status)">
-                      {{ $t(`help.admin.status.${article.status}`) }}
-                    </span>
-                    <span class="w-28 shrink-0 text-right text-xs text-muted-foreground">{{ formatDate(article.updatedAt) }}</span>
-                  </NuxtLink>
-                </template>
-              </draggable>
-            </div>
-          </template>
-        </draggable>
-      </ClientOnly>
-
-      <div v-if="!isEmpty && pageCount > 1" class="mt-4 flex items-center justify-center gap-1">
-        <button
-          v-for="n in pageCount"
-          :key="n"
-          type="button"
-          class="h-8 min-w-8 rounded-md px-2 text-xs font-bold transition-colors"
-          :class="n === page ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-secondary'"
-          @click="page = n"
-        >
-          {{ n }}
+          {{ $t('help.admin.emptyAction') }}
         </button>
       </div>
     </div>
+
+    <template v-else>
+      <div class="min-h-0 flex-1 overflow-auto bg-card">
+        <template v-if="flat">
+          <p v-if="!articles.length" class="px-6 py-14 text-center text-[13px] text-muted-foreground">
+            {{ $t('help.admin.noMatch') }}
+          </p>
+          <NuxtLink
+            v-for="article in articles"
+            :key="article.id"
+            :to="localePath(`/dashboard/help/${article.id}`)"
+            class="group flex cursor-pointer items-center gap-3.5 border-b border-border bg-background py-3 pl-16 pr-6 hover:bg-secondary"
+            :class="selected.has(article.id) && '!bg-primary/5'"
+          >
+            <button
+              type="button"
+              class="flex h-5 w-5 shrink-0 items-center justify-center rounded-[6px] border-2 bg-card transition-all"
+              :class="selected.has(article.id)
+                ? 'border-primary bg-primary text-primary-foreground opacity-100'
+                : 'border-border text-transparent opacity-0 group-hover:opacity-100'"
+              @click.prevent.stop="toggleSelected(article.id)"
+            >
+              <Icon name="lucide:check" size="13" />
+            </button>
+            <span class="invisible flex shrink-0"><Icon name="lucide:grip-vertical" size="14" /></span>
+            <span class="min-w-0 flex-1 truncate text-sm font-semibold leading-5">{{ article.title }}</span>
+            <span :class="[BADGE, 'gap-1 border-transparent bg-secondary text-primary']">
+              <Icon v-if="!article.collection.visible" name="lucide:eye-off" size="11" />
+              {{ article.collection.name }}
+            </span>
+            <span :class="[BADGE, statusClass(article.status)]">{{ $t(`help.admin.status.${article.status}`) }}</span>
+            <span class="w-24 shrink-0 text-right text-xs font-medium leading-4 text-muted-foreground">{{ formatDate(article.updatedAt) }}</span>
+          </NuxtLink>
+        </template>
+
+        <ClientOnly v-else>
+          <draggable
+            v-model="draggableCollections"
+            item-key="id"
+            handle=".drag-handle"
+            ghost-class="opacity-50"
+            @start="expanded = new Set()"
+            @end="onCollectionsDragEnd"
+          >
+            <template #item="{ element: collection }">
+              <div>
+                <div
+                  class="group relative flex cursor-pointer items-center gap-3.5 border-b border-border px-6 py-3.5 hover:bg-background/60"
+                  @click="toggleExpanded(collection.id)"
+                >
+                  <div
+                    class="drag-handle absolute left-[5px] top-1/2 flex -translate-y-1/2 cursor-grab text-muted-foreground opacity-0 transition-opacity group-hover:opacity-55"
+                    @click.stop
+                  >
+                    <Icon name="lucide:grip-vertical" size="14" />
+                  </div>
+                  <button
+                    type="button"
+                    class="flex h-5 w-5 shrink-0 items-center justify-center rounded-[6px] border-2 bg-card transition-all"
+                    :class="collectionSelection(collection) !== 'none'
+                      ? 'border-primary bg-primary text-primary-foreground opacity-100'
+                      : 'border-border text-transparent opacity-0 group-hover:opacity-100'"
+                    @click.stop="toggleCollectionSelection(collection)"
+                  >
+                    <Icon v-if="collectionSelection(collection) === 'all'" name="lucide:check" size="13" />
+                    <span v-else-if="collectionSelection(collection) === 'some'" class="h-0.5 w-2.5 rounded-full bg-primary-foreground" />
+                  </button>
+                  <Icon
+                    name="lucide:chevron-right"
+                    size="16"
+                    class="shrink-0 text-muted-foreground transition-transform"
+                    :class="expanded.has(collection.id) && 'rotate-90'"
+                  />
+                  <Icon :name="`lucide:${collection.icon}`" size="16" class="shrink-0 text-muted-foreground" />
+                  <span class="min-w-0 flex-1">
+                    <span class="block truncate text-sm font-bold leading-5">{{ collection.name }}</span>
+                    <span class="block truncate text-xs leading-4 text-muted-foreground">{{ collection.description }}</span>
+                  </span>
+                  <span v-if="!collection.visible" :class="[BADGE, BADGE_DRAFT]">{{ $t('help.admin.hidden') }}</span>
+                  <span class="shrink-0 text-xs font-medium leading-4 text-muted-foreground">
+                    {{ $t('help.admin.articleCount', { n: collection.articleCount }, collection.articleCount) }}
+                  </span>
+                  <button
+                    type="button"
+                    class="flex h-7 w-7 shrink-0 items-center justify-center rounded text-muted-foreground hover:bg-secondary hover:text-foreground"
+                    @click.stop="openEdit(collection)"
+                  >
+                    <Icon name="lucide:ellipsis" size="16" />
+                  </button>
+                </div>
+
+                <draggable
+                  v-if="expanded.has(collection.id)"
+                  v-model="collection.articles"
+                  item-key="id"
+                  handle=".drag-handle"
+                  ghost-class="opacity-50"
+                  @end="onArticlesDragEnd(collection)"
+                >
+                  <template #item="{ element: article }">
+                    <NuxtLink
+                      :to="localePath(`/dashboard/help/${article.id}`)"
+                      class="group flex cursor-pointer items-center gap-3.5 border-b border-border bg-background py-3 pl-16 pr-6 hover:bg-secondary"
+                      :class="selected.has(article.id) && '!bg-primary/5'"
+                    >
+                      <button
+                        type="button"
+                        class="flex h-5 w-5 shrink-0 items-center justify-center rounded-[6px] border-2 bg-card transition-all"
+                        :class="selected.has(article.id)
+                          ? 'border-primary bg-primary text-primary-foreground opacity-100'
+                          : 'border-border text-transparent opacity-0 group-hover:opacity-100'"
+                        @click.prevent.stop="toggleSelected(article.id)"
+                      >
+                        <Icon name="lucide:check" size="13" />
+                      </button>
+                      <div class="drag-handle flex shrink-0 cursor-grab text-muted-foreground opacity-40" @click.prevent.stop>
+                        <Icon name="lucide:grip-vertical" size="14" />
+                      </div>
+                      <span class="min-w-0 flex-1 truncate text-sm font-semibold leading-5">{{ article.title }}</span>
+                      <span :class="[BADGE, statusClass(article.status)]">{{ $t(`help.admin.status.${article.status}`) }}</span>
+                      <span class="w-24 shrink-0 text-right text-xs font-medium leading-4 text-muted-foreground">{{ formatDate(article.updatedAt) }}</span>
+                    </NuxtLink>
+                  </template>
+                </draggable>
+              </div>
+            </template>
+          </draggable>
+        </ClientOnly>
+      </div>
+
+      <div class="flex h-16 shrink-0 items-center justify-between border-t border-border bg-card px-6">
+        <span class="text-xs font-medium text-muted-foreground">
+          {{ $t('help.admin.showing', { from: rangeFrom, to: rangeTo, total }) }}
+        </span>
+        <div class="flex gap-2">
+          <button
+            type="button"
+            class="flex h-8 w-8 items-center justify-center rounded border border-border text-xs font-bold disabled:opacity-40"
+            :disabled="page <= 1"
+            @click="page--"
+          >
+            <Icon name="lucide:chevron-left" size="16" />
+          </button>
+          <button
+            v-for="n in pageCount"
+            :key="n"
+            type="button"
+            class="h-8 w-8 rounded border border-border text-xs font-bold transition-colors"
+            :class="n === page ? 'bg-primary text-primary-foreground border-primary' : 'hover:bg-secondary'"
+            @click="page = n"
+          >
+            {{ n }}
+          </button>
+          <button
+            type="button"
+            class="flex h-8 w-8 items-center justify-center rounded border border-border text-xs font-bold disabled:opacity-40"
+            :disabled="page >= pageCount"
+            @click="page++"
+          >
+            <Icon name="lucide:chevron-right" size="16" />
+          </button>
+        </div>
+      </div>
+    </template>
 
     <HelpCollectionDialog v-model:open="dialogOpen" :collection="editing" @saved="refreshAll" @deleted="refreshAll" />
   </div>
