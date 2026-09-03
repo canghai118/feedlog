@@ -844,7 +844,36 @@
       "emptyHeading": "这里还什么都没有",
       "emptyAction": "创建分区",
       "noMatch": "没有匹配的文章",
-      "showing": "显示第 {from} 至 {to} 条，共 {total} 条"
+      "showing": "显示第 {from} 至 {to} 条，共 {total} 条",
+      "editor": {
+        "back": "帮助中心",
+        "unsaved": "有未保存的修改",
+        "notSaved": "尚未保存",
+        "lastSaved": "上次保存 {at}",
+        "preview": "预览",
+        "saveDraft": "保存草稿",
+        "title": "标题",
+        "titlePlaceholder": "未命名文章",
+        "description": "描述",
+        "descriptionPlaceholder": "显示在标题下方的一行说明",
+        "body": "正文",
+        "bodyPlaceholder": "在这里用 Markdown 书写…",
+        "collection": "所属分区",
+        "details": "详情",
+        "created": "创建时间",
+        "updated": "更新时间",
+        "articleUrl": "文章网址",
+        "urlPending": "首次保存后分配。",
+        "copied": "链接已复制",
+        "hiddenWarning": "这篇文章已发布，但分区「{name}」对读者隐藏——他们还看不到它。把该分区设为可见后才会真正对外。",
+        "previewHeader": "预览 · 读者看到的样子（门户文章版式）",
+        "leaveTitle": "离开且不保存？",
+        "leaveBody": "这篇文章有尚未保存的修改。现在离开将丢弃它们。",
+        "leaveKeep": "继续编辑",
+        "leaveDiscard": "丢弃修改",
+        "saveFailed": "文章保存失败",
+        "saved": "已保存"
+      }
     }
   }
 }

@@ -844,7 +844,36 @@
       "emptyHeading": "Nothing here yet",
       "emptyAction": "Create a collection",
       "noMatch": "No articles matched",
-      "showing": "Showing {from} to {to} of {total} entries"
+      "showing": "Showing {from} to {to} of {total} entries",
+      "editor": {
+        "back": "Help Center",
+        "unsaved": "Unsaved changes",
+        "notSaved": "Not saved yet",
+        "lastSaved": "Last saved {at}",
+        "preview": "Preview",
+        "saveDraft": "Save draft",
+        "title": "Title",
+        "titlePlaceholder": "Untitled article",
+        "description": "Description",
+        "descriptionPlaceholder": "One line shown under the title",
+        "body": "Body",
+        "bodyPlaceholder": "Write here in Markdown…",
+        "collection": "Collection",
+        "details": "Details",
+        "created": "Created",
+        "updated": "Updated",
+        "articleUrl": "Article URL",
+        "urlPending": "Assigned when you first save.",
+        "copied": "Link copied",
+        "hiddenWarning": "This article is published, but {name} is hidden from readers — they cannot see it yet. Turn the collection visible to publish it.",
+        "previewHeader": "Preview · exactly how readers will see it (portal article layout)",
+        "leaveTitle": "Leave without saving?",
+        "leaveBody": "This article has changes that have not been saved. If you leave now they are discarded.",
+        "leaveKeep": "Keep editing",
+        "leaveDiscard": "Discard changes",
+        "saveFailed": "Could not save the article",
+        "saved": "Saved"
+      }
     }
   }
 }
