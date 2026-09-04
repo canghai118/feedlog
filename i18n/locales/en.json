@@ -815,7 +815,6 @@
       "viewCollections": "Collections",
       "viewArticles": "All articles",
       "searchPlaceholder": "Search article titles",
-      "hidden": "Hidden",
       "articleCount": "{n} article | {n} articles",
       "emptyTitle": "Create a collection, then write your first article.",
       "selected": "{n} article selected | {n} articles selected",
@@ -827,7 +826,8 @@
       "status": {
         "draft": "Draft",
         "published": "Published",
-        "archived": "Archived"
+        "archived": "Archived",
+        "hidden": "Hidden"
       },
       "collection": {
         "createTitle": "New collection",

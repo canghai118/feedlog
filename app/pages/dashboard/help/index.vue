@@ -393,7 +393,7 @@ function formatDate(iso: string) {
                     <span class="block truncate text-sm font-bold leading-5">{{ collection.name }}</span>
                     <span class="block truncate text-xs leading-4 text-muted-foreground">{{ collection.description }}</span>
                   </span>
-                  <span v-if="!collection.visible" :class="[BADGE, BADGE_DRAFT]">{{ $t('help.admin.hidden') }}</span>
+                  <HelpStatusBadge v-if="!collection.visible" status="hidden" />
                   <span class="shrink-0 text-xs font-medium leading-4 text-muted-foreground">
                     {{ $t('help.admin.articleCount', { n: collection.articleCount }, collection.articleCount) }}
                   </span>

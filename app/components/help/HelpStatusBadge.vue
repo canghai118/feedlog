@@ -1,12 +1,17 @@
 <script setup lang="ts">
 import type { HelpArticleStatus } from '#layers/feedlog/shared/constants/help'
 
-const props = defineProps<{ status: HelpArticleStatus }>()
+type HelpBadgeStatus = HelpArticleStatus | 'hidden'
 
-const TONES: Record<HelpArticleStatus, string> = {
+const props = defineProps<{ status: HelpBadgeStatus }>()
+
+const NEUTRAL = 'text-[var(--status-open)] bg-[var(--status-open-bg)] border-[var(--status-open-border)]'
+
+const TONES: Record<HelpBadgeStatus, string> = {
   published: 'text-[var(--status-done)] bg-[var(--status-done-bg)] border-[var(--status-done-border)]',
-  draft: 'text-[var(--status-open)] bg-[var(--status-open-bg)] border-[var(--status-open-border)]',
+  draft: NEUTRAL,
   archived: 'text-[#8D6E52] bg-[rgba(141,110,82,.10)] border-[rgba(141,110,82,.22)]',
+  hidden: NEUTRAL,
 }
 
 const tone = computed(() => TONES[props.status] ?? TONES.draft)

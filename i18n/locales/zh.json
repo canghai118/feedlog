@@ -815,7 +815,6 @@
       "viewCollections": "分区",
       "viewArticles": "全部文章",
       "searchPlaceholder": "搜索文章标题",
-      "hidden": "已隐藏",
       "articleCount": "{n} 篇文章 | {n} 篇文章",
       "emptyTitle": "先创建分区，再写第一篇文章。",
       "selected": "已选中 {n} 篇文章 | 已选中 {n} 篇文章",
@@ -827,7 +826,8 @@
       "status": {
         "draft": "草稿",
         "published": "已发布",
-        "archived": "已归档"
+        "archived": "已归档",
+        "hidden": "已隐藏"
       },
       "collection": {
         "createTitle": "新建分区",
