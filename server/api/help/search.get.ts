@@ -37,6 +37,7 @@ export default defineEventHandler(async (event) => {
       eq(helpCollection.visible, true),
       sql`${helpArticle.tsv} @@ (${tsQuery})`,
     ))
+    // ts_rank_cd's weight array is ordered {D,C,B,A}, so {0,0,0,1} isolates A (title) and {0,0,1,0} isolates B (description).
     .orderBy(
       sql`(case when ts_rank_cd('{0,0,0,1}', ${helpArticle.tsv}, (${tsQuery})) > 0 then 2
                 when ts_rank_cd('{0,0,1,0}', ${helpArticle.tsv}, (${tsQuery})) > 0 then 1
