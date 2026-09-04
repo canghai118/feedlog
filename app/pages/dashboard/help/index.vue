@@ -81,6 +81,7 @@ const { data: collectionsData, refresh: refreshCollections } = await useFetch<{
 }>('/api/admin/help/collections', {
   query: computed(() => ({ page: page.value, pageSize: PAGE_SIZE })),
   immediate: true,
+  deep: true,
 })
 
 const { data: articlesData, refresh: refreshArticles } = await useFetch<{
