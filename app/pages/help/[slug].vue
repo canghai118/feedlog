@@ -190,10 +190,11 @@ useRobotsRule(computed(() => (article.value ? 'index, follow' : 'noindex')))
             v-for="item in toc"
             :key="item.id"
             type="button"
-            class="block w-full border-l-2 py-[7px] text-left text-[13px] leading-[19px] transition-colors"
+            class="block w-full border-l-2 py-[7px] text-left leading-[19px] transition-colors"
             :class="[
-              item.level === 3 ? 'pl-7 text-[12.5px]' : 'pl-3.5',
-              item.id === activeId ? 'border-primary font-semibold text-primary' : 'border-border text-muted-foreground hover:text-foreground',
+              item.level === 3 ? 'pl-7 text-[12.5px]' : 'pl-3.5 text-[13px]',
+              item.id === activeId ? 'font-semibold' : item.level === 3 ? 'font-medium' : '',
+              item.id === activeId ? 'border-primary text-primary' : 'border-border text-muted-foreground hover:text-foreground',
             ]"
             @click="goToHeading(item.id)"
           >
