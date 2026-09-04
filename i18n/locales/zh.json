@@ -805,7 +805,8 @@
     "admin": {
       "title": "帮助中心",
       "statsEmpty": "还没有内容",
-      "stats": "{collections} 个分区 · {articles} 篇文章",
+      "statsCollections": "{n} 个分区",
+      "statsArticles": "{n} 篇文章",
       "new": "新建",
       "newCollection": "新建分区",
       "newCollectionHint": "把相关文章归到一组",

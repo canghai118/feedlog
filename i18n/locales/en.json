@@ -805,7 +805,8 @@
     "admin": {
       "title": "Help Center",
       "statsEmpty": "No content yet",
-      "stats": "{collections} collections · {articles} articles",
+      "statsCollections": "{n} collection | {n} collections",
+      "statsArticles": "{n} article | {n} articles",
       "new": "New",
       "newCollection": "New collection",
       "newCollectionHint": "Group related articles",

@@ -221,9 +221,12 @@ function formatDate(iso: string) {
         <h2 class="font-heading text-lg font-bold">{{ $t('help.admin.title') }}</h2>
         <div class="h-4 w-px bg-border" />
         <span class="text-xs font-medium text-muted-foreground">
-          {{ isEmpty
-            ? $t('help.admin.statsEmpty')
-            : $t('help.admin.stats', { collections: stats?.collectionCount ?? 0, articles: stats?.articleCount ?? 0 }) }}
+          <template v-if="isEmpty">{{ $t('help.admin.statsEmpty') }}</template>
+          <template v-else>
+            {{ $t('help.admin.statsCollections', { n: stats?.collectionCount ?? 0 }, stats?.collectionCount ?? 0) }}
+            ·
+            {{ $t('help.admin.statsArticles', { n: stats?.articleCount ?? 0 }, stats?.articleCount ?? 0) }}
+          </template>
         </span>
       </div>
 
