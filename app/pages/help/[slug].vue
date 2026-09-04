@@ -147,7 +147,7 @@ useRobotsRule(computed(() => (article.value ? 'index, follow' : 'noindex')))
           <div class="mb-[18px] flex flex-wrap items-center gap-2 text-[13px] leading-[18px]">
             <NuxtLink :to="localePath('/help')" class="font-semibold text-muted-foreground hover:text-foreground">{{ $t('help.portal.back') }}</NuxtLink>
             <Icon name="lucide:chevron-right" size="13" class="text-muted-foreground" />
-            <NuxtLink :to="localePath(`/help/c/${article.collection.id}`)" class="font-semibold text-muted-foreground hover:text-foreground">{{ article.collection.name }}</NuxtLink>
+            <NuxtLink :to="localePath(`/help/c/${article.collection.id}`)" class="max-w-[280px] truncate font-semibold text-muted-foreground hover:text-foreground">{{ article.collection.name }}</NuxtLink>
             <Icon name="lucide:chevron-right" size="13" class="text-muted-foreground" />
             <span class="max-w-[280px] truncate font-semibold">{{ article.title }}</span>
           </div>
