@@ -35,12 +35,15 @@ if (article.value && segment !== `${article.value.shortId}-${article.value.canon
 
 const editorId = 'help-article-preview'
 const catalogAnchor = ref<HTMLElement | null>(null)
-const headings = computed(() => (article.value?.content.match(/^#{2,3}\s+.+$/gm) ?? []).length)
+const headings = computed(() =>
+  ((article.value?.content ?? '').replace(/^```[\s\S]*?^```/gm, '').match(/^#{2,3}\s+.+$/gm) ?? []).length)
 
 const anchorSeen = new Map<string, number>()
 const anchorId = (heading: { text?: string; index?: number }) => {
   if (heading?.index === 0) anchorSeen.clear()
-  const base = String(heading?.text ?? '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+  const base = String(heading?.text ?? '').toLowerCase()
+    .replace(/[^a-z0-9\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]+/g, '-')
+    .replace(/^-|-$/g, '')
     || `section-${heading?.index ?? 0}`
   const seen = anchorSeen.get(base) ?? 0
   anchorSeen.set(base, seen + 1)
@@ -129,7 +132,7 @@ useRobotsRule(computed(() => (article.value ? 'index, follow' : 'noindex')))
             {{ $t('help.portal.onThisPage') }}
           </p>
           <ClientOnly>
-            <MdCatalog :editor-id="editorId" :scroll-element-offset-top="24" />
+            <MdCatalog :editor-id="editorId" :catalog-max-depth="3" :scroll-element-offset-top="24" />
           </ClientOnly>
         </aside>
       </div>
