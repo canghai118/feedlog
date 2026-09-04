@@ -12,7 +12,7 @@ interface ArticlePage {
   publishedAt: string | null
   updatedAt: string
   collection: { id: string; name: string }
-  siblings: { shortId: string; slug: string; title: string }[]
+  siblings: { shortId: string; slug: string; title: string; description: string | null }[]
 }
 
 const route = useRoute()
@@ -175,6 +175,7 @@ useRobotsRule(computed(() => (article.value ? 'index, follow' : 'noindex')))
             >
               <span class="min-w-0 flex-1">
                 <span class="block text-[15px] font-bold leading-[22px]">{{ sibling.title }}</span>
+                <span v-if="sibling.description" class="mt-0.5 block truncate text-[13px] leading-[19px] text-muted-foreground">{{ sibling.description }}</span>
               </span>
               <Icon name="lucide:chevron-right" size="16" class="shrink-0 text-muted-foreground" />
             </NuxtLink>

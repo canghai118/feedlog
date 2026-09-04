@@ -36,6 +36,7 @@ export default defineEventHandler(async (event) => {
       shortId: helpArticle.shortId,
       slug: helpArticle.slug,
       title: helpArticle.title,
+      description: helpArticle.description,
     })
     .from(helpArticle)
     .where(and(
