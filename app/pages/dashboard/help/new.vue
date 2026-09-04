@@ -2,9 +2,9 @@
 definePageMeta({ layout: 'dashboard', middleware: 'admin' })
 
 const route = useRoute()
-const articleId = computed(() => route.params.id as string)
+const collectionId = computed(() => route.query.collection as string | undefined)
 </script>
 
 <template>
-  <HelpArticleEditor :article-id="articleId" />
+  <HelpArticleEditor :collection-id="collectionId" />
 </template>
