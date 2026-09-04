@@ -162,7 +162,7 @@ async function removeArticle() {
     await router.push(localePath('/dashboard/help'))
   }
   catch (e) {
-    toast.error((e as { data?: { message?: string } }).data?.message || t('help.admin.editor.saveFailed'))
+    toast.error((e as { data?: { message?: string } }).data?.message || t('help.admin.editor.deleteFailed'))
   }
   finally {
     saving.value = false

@@ -19,3 +19,5 @@ export type HelpArticleStatus = typeof HELP_ARTICLE_STATUSES[number]
 
 export const HELP_SHORT_ID_ALPHABET = '0123456789abcdefghijkmnpqrstuvwxyz'
 export const HELP_SHORT_ID_LENGTH = 6
+
+export const CJK_RANGE = '\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff'

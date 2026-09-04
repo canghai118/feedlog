@@ -4,9 +4,9 @@ import { pinyin } from 'pinyin-pro'
 import { and, eq, sql } from 'drizzle-orm'
 import type { SQL } from 'drizzle-orm'
 import { helpArticle, helpCollection } from '#layers/feedlog/server/db/schemas'
-import { HELP_SHORT_ID_ALPHABET, HELP_SHORT_ID_LENGTH } from '#layers/feedlog/shared/constants/help'
+import { CJK_RANGE, HELP_SHORT_ID_ALPHABET, HELP_SHORT_ID_LENGTH } from '#layers/feedlog/shared/constants/help'
 
-const CJK = /[㐀-䶿一-鿿豈-﫿]/
+const CJK = new RegExp(`[${CJK_RANGE}]`)
 
 const shortId = customAlphabet(HELP_SHORT_ID_ALPHABET, HELP_SHORT_ID_LENGTH)
 

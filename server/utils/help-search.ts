@@ -1,7 +1,8 @@
 import { sql } from 'drizzle-orm'
 import type { SQL } from 'drizzle-orm'
+import { CJK_RANGE } from '#layers/feedlog/shared/constants/help'
 
-const CJK_CHAR = /[㐀-䶿一-鿿豈-﫿]/
+const CJK_CHAR = new RegExp(`[${CJK_RANGE}]`)
 const WIDE_CHAR = /[ᄀ-ᅟ⺀-꓏ꥠ-꥿가-힣豈-﫿︐-︙︰-﹯＀-｠￠-￦]/
 const LATIN_STEM = /(ing|ed|es|s)$/i
 

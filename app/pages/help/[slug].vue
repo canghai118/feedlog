@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { MdCatalog } from 'md-editor-v3'
 import { toast } from 'vue-sonner'
+import { CJK_RANGE } from '#layers/feedlog/shared/constants/help'
 
 interface ArticlePage {
   shortId: string
@@ -42,7 +43,7 @@ const anchorSeen = new Map<string, number>()
 const anchorId = (heading: { text?: string; index?: number }) => {
   if (heading?.index === 0) anchorSeen.clear()
   const base = String(heading?.text ?? '').toLowerCase()
-    .replace(/[^a-z0-9\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]+/g, '-')
+    .replace(new RegExp(`[^a-z0-9${CJK_RANGE}]+`, 'g'), '-')
     .replace(/^-|-$/g, '')
     || `section-${heading?.index ?? 0}`
   const seen = anchorSeen.get(base) ?? 0
