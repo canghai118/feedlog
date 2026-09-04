@@ -103,7 +103,11 @@ const contentBody = () => ({
 })
 
 async function create(publish: boolean) {
-  if (!draftCollectionId.value) return
+  if (!draftCollectionId.value) {
+    toast.error(t('help.admin.newArticleDisabledHint'))
+    return
+  }
+
   saving.value = true
   try {
     const created = await $fetch<{ id: string }>('/api/admin/help/articles', {
