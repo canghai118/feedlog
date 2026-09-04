@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { toast } from 'vue-sonner'
 import type { HelpArticleStatus, HelpCollectionIcon } from '#layers/feedlog/shared/constants/help'
+import '~/assets/css/help-article.css'
 
 interface ArticleDetail {
   id: string
@@ -353,7 +354,9 @@ function goBack() {
             <p v-if="form.description" class="mb-5 text-base leading-[26px] text-muted-foreground">{{ form.description }}</p>
             <hr class="mb-6 border-border">
             <ClientOnly>
-              <ThemedMdPreview :model-value="form.content" />
+              <div class="help-article-styled">
+                <ThemedMdPreview :model-value="form.content" />
+              </div>
             </ClientOnly>
           </div>
         </div>

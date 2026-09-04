@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { toast } from 'vue-sonner'
 import { CJK_RANGE } from '#layers/feedlog/shared/constants/help'
+import '~/assets/css/help-article.css'
 
 interface ArticlePage {
   shortId: string
@@ -158,7 +159,7 @@ useRobotsRule(computed(() => (article.value ? 'index, follow' : 'noindex')))
           </div>
           <hr class="mb-6 border-border">
 
-          <div ref="bodyRoot">
+          <div ref="bodyRoot" class="help-article-styled">
             <ThemedMdPreview :editor-id="editorId" :model-value="article.content" :md-heading-id="anchorId" />
           </div>
 
