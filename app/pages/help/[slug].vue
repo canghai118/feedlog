@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { MdCatalog } from 'md-editor-v3'
 import { toast } from 'vue-sonner'
 import { CJK_RANGE } from '#layers/feedlog/shared/constants/help'
 
@@ -35,9 +34,6 @@ if (article.value && segment !== `${article.value.shortId}-${article.value.canon
 }
 
 const editorId = 'help-article-preview'
-const catalogAnchor = ref<HTMLElement | null>(null)
-const headings = computed(() =>
-  ((article.value?.content ?? '').replace(/^```[\s\S]*?^```/gm, '').match(/^#{2,3}\s+.+$/gm) ?? []).length)
 
 const anchorSeen = new Map<string, number>()
 let anchorLastIndex = Number.POSITIVE_INFINITY
@@ -59,6 +55,43 @@ const anchorId = (heading: { text?: string; index?: number }) => {
 const formatDate = useFormatDate()
 
 const bodyRoot = ref<HTMLElement | null>(null)
+const toc = ref<{ id: string; text: string; level: number }[]>([])
+const activeId = ref('')
+
+const TOC_OFFSET = 24
+
+function readHeadings() {
+  const nodes = bodyRoot.value?.querySelectorAll<HTMLElement>('h2[id], h3[id]') ?? []
+  toc.value = [...nodes].map(node => ({
+    id: node.id,
+    text: node.textContent?.replace(/#$/, '').trim() ?? '',
+    level: Number(node.tagName[1]),
+  }))
+  syncActive()
+}
+
+function syncActive() {
+  const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2
+  if (atBottom && toc.value.length) {
+    activeId.value = toc.value[toc.value.length - 1]!.id
+    return
+  }
+
+  let current = toc.value[0]?.id ?? ''
+  for (const item of toc.value) {
+    const el = document.getElementById(item.id)
+    if (el && el.getBoundingClientRect().top <= TOC_OFFSET + 1) current = item.id
+  }
+  activeId.value = current
+}
+
+function goToHeading(id: string) {
+  const el = document.getElementById(id)
+  if (!el) return
+  const top = el.getBoundingClientRect().top + window.scrollY - TOC_OFFSET
+  window.scrollTo({ top, behavior: 'smooth' })
+  activeId.value = id
+}
 
 function mountAnchors() {
   for (const heading of bodyRoot.value?.querySelectorAll<HTMLElement>('h2[id], h3[id]') ?? []) {
@@ -74,9 +107,14 @@ function mountAnchors() {
     })
     heading.append(mark)
   }
+  readHeadings()
 }
 
-onMounted(() => nextTick(mountAnchors))
+onMounted(() => {
+  nextTick(mountAnchors)
+  window.addEventListener('scroll', syncActive, { passive: true })
+})
+onBeforeUnmount(() => window.removeEventListener('scroll', syncActive))
 watch(() => article.value?.content, () => nextTick(mountAnchors))
 
 usePageOg({
@@ -132,20 +170,24 @@ useRobotsRule(computed(() => (article.value ? 'index, follow' : 'noindex')))
           </div>
         </div>
 
-        <aside v-if="headings >= 2" ref="catalogAnchor" class="sticky top-6">
+        <aside v-show="toc.length >= 2" class="sticky top-6">
           <p class="mb-3 flex items-center gap-2 text-[13px] font-bold leading-[18px] text-muted-foreground">
             <Icon name="lucide:list" size="15" />
             {{ $t('help.portal.onThisPage') }}
           </p>
-          <ClientOnly>
-            <MdCatalog
-              :editor-id="editorId"
-              :md-heading-id="anchorId"
-              :catalog-max-depth="3"
-              scroll-element="html"
-              :scroll-element-offset-top="24"
-            />
-          </ClientOnly>
+          <button
+            v-for="item in toc"
+            :key="item.id"
+            type="button"
+            class="block w-full border-l-2 py-[7px] text-left text-[13px] leading-[19px] transition-colors"
+            :class="[
+              item.level === 3 ? 'pl-7 text-[12.5px]' : 'pl-3.5',
+              item.id === activeId ? 'border-primary font-semibold text-primary' : 'border-border text-muted-foreground hover:text-foreground',
+            ]"
+            @click="goToHeading(item.id)"
+          >
+            {{ item.text }}
+          </button>
         </aside>
       </div>
     </div>
