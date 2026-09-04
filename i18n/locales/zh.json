@@ -876,7 +876,11 @@
         "leaveKeep": "继续编辑",
         "leaveDiscard": "丢弃修改",
         "saveFailed": "文章保存失败",
-        "saved": "已保存"
+        "saved": "已保存",
+        "delete": "删除文章",
+        "deleteTitle": "删除「{title}」？",
+        "deleteDescription": "这篇文章及其网址将被永久移除，且无法撤销。",
+        "deleted": "文章已删除"
       }
     },
     "portal": {

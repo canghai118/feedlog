@@ -26,6 +26,7 @@ interface CollectionOption {
 }
 
 const { t } = useI18n()
+const { confirm } = useConfirmDialog()
 const route = useRoute()
 const router = useRouter()
 const localePath = useLocalePath()
@@ -142,6 +143,32 @@ async function pickCollection(collectionId: string) {
   Object.assign(form, pending)
 }
 
+async function removeArticle() {
+  if (!article.value) return
+
+  const ok = await confirm({
+    title: t('help.admin.editor.deleteTitle', { title: article.value.title }),
+    description: t('help.admin.editor.deleteDescription'),
+    confirmText: t('common.delete'),
+    cancelText: t('common.cancel'),
+    variant: 'destructive',
+  })
+  if (!ok) return
+
+  saving.value = true
+  try {
+    await $fetch(`/api/admin/help/articles/${id}`, { method: 'DELETE' })
+    toast.success(t('help.admin.editor.deleted'))
+    await router.push(localePath('/dashboard/help'))
+  }
+  catch (e) {
+    toast.error((e as { data?: { message?: string } }).data?.message || t('help.admin.editor.saveFailed'))
+  }
+  finally {
+    saving.value = false
+  }
+}
+
 async function copyUrl() {
   await navigator.clipboard.writeText(`${location.origin}${articleUrl.value}`)
   toast.success(t('help.admin.editor.copied'))
@@ -192,6 +219,17 @@ function goBack() {
       </div>
 
       <div class="flex items-center gap-2">
+        <button
+          v-if="article"
+          type="button"
+          class="inline-flex h-9 items-center gap-1.5 rounded-2xl border border-destructive/40 px-3 text-xs font-bold text-destructive hover:bg-destructive/10 disabled:opacity-50"
+          :disabled="saving"
+          @click="removeArticle"
+        >
+          <Icon name="lucide:trash-2" size="14" />
+          {{ $t('help.admin.editor.delete') }}
+        </button>
+        <div v-if="article" class="h-4 w-px bg-border" />
         <button type="button" class="inline-flex h-9 items-center gap-2 rounded-2xl border border-border bg-background px-3 text-xs font-bold text-muted-foreground hover:text-foreground" @click="previewOpen = true">
           <Icon name="lucide:eye" size="16" />
           {{ $t('help.admin.editor.preview') }}

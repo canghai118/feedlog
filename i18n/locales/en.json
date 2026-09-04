@@ -876,7 +876,11 @@
         "leaveKeep": "Keep editing",
         "leaveDiscard": "Discard changes",
         "saveFailed": "Could not save the article",
-        "saved": "Saved"
+        "saved": "Saved",
+        "delete": "Delete article",
+        "deleteTitle": "Delete \"{title}\"?",
+        "deleteDescription": "This article and its URL are permanently removed. This cannot be undone.",
+        "deleted": "Article deleted"
       }
     },
     "portal": {
