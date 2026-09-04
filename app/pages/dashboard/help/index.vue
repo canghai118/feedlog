@@ -190,7 +190,7 @@ async function runBulk(action: 'publish' | 'unpublish') {
   })
   selected.value = new Set()
   await refreshAll()
-  toast.success(t(`help.admin.${action}Result`, { n: result.affected }))
+  toast.success(t(`help.admin.${action}Result`, { n: result.affected }, result.affected))
 }
 
 const CHIP = 'inline-flex shrink-0 items-center rounded border px-2 py-0.5 text-[10px] font-bold leading-[15px]'

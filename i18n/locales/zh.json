@@ -821,8 +821,8 @@
       "clear": "清空",
       "publish": "发布",
       "unpublish": "撤下",
-      "publishResult": "已发布 {n} 篇文章",
-      "unpublishResult": "已撤下 {n} 篇文章",
+      "publishResult": "已发布 {n} 篇文章 | 已发布 {n} 篇文章",
+      "unpublishResult": "已撤下 {n} 篇文章 | 已撤下 {n} 篇文章",
       "status": {
         "draft": "草稿",
         "published": "已发布",

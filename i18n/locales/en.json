@@ -821,8 +821,8 @@
       "clear": "Clear",
       "publish": "Publish",
       "unpublish": "Unpublish",
-      "publishResult": "{n} articles published",
-      "unpublishResult": "{n} articles unpublished",
+      "publishResult": "{n} article published | {n} articles published",
+      "unpublishResult": "{n} article unpublished | {n} articles unpublished",
       "status": {
         "draft": "Draft",
         "published": "Published",
