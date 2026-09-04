@@ -291,7 +291,7 @@ function formatDate(iso: string) {
             v-for="option in (['collections', 'articles'] as const)"
             :key="option"
             type="button"
-            class="h-[26px] rounded-lg px-3 text-xs font-bold leading-4 transition-colors"
+            class="h-[26px] whitespace-nowrap rounded-lg px-3 text-xs font-bold leading-4 transition-colors"
             :class="view === option ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'"
             @click="view = option"
           >
