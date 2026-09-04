@@ -388,7 +388,9 @@ function formatDate(iso: string) {
                     class="shrink-0 text-muted-foreground transition-transform"
                     :class="expanded.has(collection.id) && 'rotate-90'"
                   />
-                  <Icon :name="`lucide:${collection.icon}`" size="16" class="shrink-0 text-muted-foreground" />
+                  <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-secondary text-primary">
+                    <Icon :name="`lucide:${collection.icon}`" size="16" />
+                  </span>
                   <span class="min-w-0 flex-1">
                     <span class="block truncate text-sm font-bold leading-5">{{ collection.name }}</span>
                     <span class="block truncate text-xs leading-4 text-muted-foreground">{{ collection.description }}</span>
