@@ -10,20 +10,20 @@ const MAX_SEGMENTS = 8
 const EXCERPT_BEFORE = 100
 const EXCERPT_AFTER = 160
 
-export interface HelpQuerySub {
+export interface HelpQueryToken {
   kind: 'latin' | 'cjk'
   text: string
 }
 
-export function splitHelpQuery(q: string): HelpQuerySub[] {
-  const subs: HelpQuerySub[] = []
+export function splitHelpQuery(q: string): HelpQueryToken[] {
+  const tokens: HelpQueryToken[] = []
 
   for (const segment of q.trim().split(/\s+/).filter(Boolean).slice(0, MAX_SEGMENTS)) {
     let buffer = ''
-    let kind: HelpQuerySub['kind'] | null = null
+    let kind: HelpQueryToken['kind'] | null = null
 
     const flush = () => {
-      if (buffer && kind) subs.push({ kind, text: buffer })
+      if (buffer && kind) tokens.push({ kind, text: buffer })
       buffer = ''
     }
 
@@ -38,14 +38,14 @@ export function splitHelpQuery(q: string): HelpQuerySub[] {
     flush()
   }
 
-  return subs.filter(sub => sub.kind === 'cjk' || /[a-z0-9]/i.test(sub.text))
+  return tokens.filter(token => token.kind === 'cjk' || /[a-z0-9]/i.test(token.text))
 }
 
-export function buildHelpTsQuery(subs: HelpQuerySub[]): SQL | null {
-  const parts = subs.map((sub) => {
-    if (sub.kind === 'latin') return sql`plainto_tsquery('english', ${sub.text})`
-    if (sub.text.length >= 2) return sql`to_tsquery('simple', ${cjkBigrams(sub.text).split(' ').join(' | ')})`
-    return sql`to_tsquery('simple', ${`${sub.text}:*`})`
+export function buildHelpTsQuery(tokens: HelpQueryToken[]): SQL | null {
+  const parts = tokens.map((token) => {
+    if (token.kind === 'latin') return sql`plainto_tsquery('english', ${token.text})`
+    if (token.text.length >= 2) return sql`to_tsquery('simple', ${cjkBigrams(token.text).split(' ').join(' | ')})`
+    return sql`to_tsquery('simple', ${`${token.text}:*`})`
   })
 
   if (!parts.length) return null
@@ -69,19 +69,19 @@ function mergeRanges(ranges: [number, number][]): [number, number][] {
   return out
 }
 
-export function helpHighlightRanges(text: string, subs: HelpQuerySub[]): [number, number][] {
+export function helpHighlightRanges(text: string, tokens: HelpQueryToken[]): [number, number][] {
   const ranges: [number, number][] = []
 
-  for (const sub of subs) {
+  for (const token of tokens) {
     let pattern: RegExp
-    if (sub.kind === 'latin') {
-      const root = sub.text.replace(LATIN_STEM, '')
-      pattern = root.length >= 4 && root.length < sub.text.length
+    if (token.kind === 'latin') {
+      const root = token.text.replace(LATIN_STEM, '')
+      pattern = root.length >= 4 && root.length < token.text.length
         ? new RegExp(`${escapeRegExp(root)}[\\p{L}\\p{N}]*`, 'giu')
-        : new RegExp(escapeRegExp(sub.text), 'gi')
+        : new RegExp(escapeRegExp(token.text), 'gi')
     }
     else {
-      pattern = new RegExp(escapeRegExp(sub.text), 'g')
+      pattern = new RegExp(escapeRegExp(token.text), 'g')
     }
 
     for (const match of text.matchAll(pattern)) {
@@ -103,15 +103,15 @@ function truncateToWidth(text: string, maxWidth: number): string {
   return text
 }
 
-export function buildHelpExcerpt(body: string, description: string | null, subs: HelpQuerySub[]): {
+export function buildHelpExcerpt(body: string, description: string | null, tokens: HelpQueryToken[]): {
   excerpt: string
   ranges: [number, number][]
 } {
-  const hits = helpHighlightRanges(body, subs)
+  const hits = helpHighlightRanges(body, tokens)
 
   if (!hits.length) {
     const fallback = truncateToWidth((description?.trim() || body).trim(), EXCERPT_BEFORE + EXCERPT_AFTER)
-    return { excerpt: fallback, ranges: helpHighlightRanges(fallback, subs) }
+    return { excerpt: fallback, ranges: helpHighlightRanges(fallback, tokens) }
   }
 
   const [hitStart, hitEnd] = hits[0]!

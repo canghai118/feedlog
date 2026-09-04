@@ -7,8 +7,8 @@ const RATE_LIMIT = { limit: 30, windowSeconds: 60 }
 export default defineEventHandler(async (event) => {
   const orgId = await requireHelpCenterOrg(event)
 
-  const subs = splitHelpQuery(((getQuery(event).q as string | undefined) ?? '').trim())
-  const tsQuery = buildHelpTsQuery(subs)
+  const tokens = splitHelpQuery(((getQuery(event).q as string | undefined) ?? '').trim())
+  const tsQuery = buildHelpTsQuery(tokens)
   if (!tsQuery) return { total: 0, data: [] }
 
   const ip = getRequestIP(event, { xForwardedFor: true }) || 'unknown'
@@ -50,12 +50,12 @@ export default defineEventHandler(async (event) => {
   return {
     total: rows[0]?.total ?? 0,
     data: rows.map((row) => {
-      const { excerpt, ranges } = buildHelpExcerpt(stripMarkdown(row.content), row.description, subs)
+      const { excerpt, ranges } = buildHelpExcerpt(stripMarkdown(row.content), row.description, tokens)
       return {
         shortId: row.shortId,
         slug: row.slug,
         title: row.title,
-        titleRanges: helpHighlightRanges(row.title, subs),
+        titleRanges: helpHighlightRanges(row.title, tokens),
         excerpt,
         excerptRanges: ranges,
         collection: { id: row.collectionId, name: row.collectionName },
