@@ -209,12 +209,7 @@ function goBack() {
           {{ $t('help.admin.editor.back') }}
         </button>
         <div class="h-4 w-px bg-border" />
-        <span v-if="article" class="inline-flex shrink-0 items-center rounded border px-2 py-0.5 text-[10px] font-bold leading-[15px]"
-              :class="article.status === 'published' ? 'text-[#22c55e] bg-[rgba(34,197,94,.1)] border-[rgba(34,197,94,.2)]'
-                : article.status === 'archived' ? 'text-[#8D6E52] bg-[rgba(141,110,82,.10)] border-[rgba(141,110,82,.22)]'
-                  : 'text-[#9ca3af] bg-[rgba(156,163,175,.1)] border-[rgba(156,163,175,.2)]'">
-          {{ $t(`help.admin.status.${article.status}`) }}
-        </span>
+        <HelpStatusBadge v-if="article" :status="article.status" />
         <span class="text-xs" :class="dirty ? 'font-bold text-[var(--accent)]' : 'font-medium text-muted-foreground'">
           {{ !article
             ? $t('help.admin.editor.notSaved')

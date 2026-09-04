@@ -193,14 +193,7 @@ async function runBulk(action: 'publish' | 'unpublish') {
   toast.success(t(`help.admin.${action}Result`, { n: result.affected }))
 }
 
-const BADGE = 'inline-flex shrink-0 items-center rounded border px-2 py-0.5 text-[10px] font-bold leading-[15px]'
-const BADGE_DRAFT = 'text-[#9ca3af] bg-[rgba(156,163,175,.1)] border-[rgba(156,163,175,.2)]'
-
-function statusClass(status: HelpArticleStatus) {
-  if (status === 'published') return 'text-[#22c55e] bg-[rgba(34,197,94,.1)] border-[rgba(34,197,94,.2)]'
-  if (status === 'archived') return 'text-[#8D6E52] bg-[rgba(141,110,82,.10)] border-[rgba(141,110,82,.22)]'
-  return BADGE_DRAFT
-}
+const CHIP = 'inline-flex shrink-0 items-center rounded border px-2 py-0.5 text-[10px] font-bold leading-[15px]'
 
 const rangeFrom = computed(() => (total.value === 0 ? 0 : (page.value - 1) * PAGE_SIZE + 1))
 const rangeTo = computed(() => Math.min(page.value * PAGE_SIZE, total.value))
@@ -348,11 +341,11 @@ function formatDate(iso: string) {
             </button>
             <span class="invisible flex shrink-0"><Icon name="lucide:grip-vertical" size="14" /></span>
             <span class="min-w-0 flex-1 truncate text-sm font-semibold leading-5">{{ article.title }}</span>
-            <span :class="[BADGE, 'gap-1 border-transparent bg-secondary text-primary']">
+            <span :class="[CHIP, 'gap-1 border-transparent bg-secondary text-primary']">
               <Icon v-if="!article.collection.visible" name="lucide:eye-off" size="11" />
               {{ article.collection.name }}
             </span>
-            <span :class="[BADGE, statusClass(article.status)]">{{ $t(`help.admin.status.${article.status}`) }}</span>
+            <HelpStatusBadge :status="article.status" />
             <span class="w-24 shrink-0 text-right text-xs font-medium leading-4 text-muted-foreground">{{ formatDate(article.updatedAt) }}</span>
           </NuxtLink>
         </template>
@@ -441,7 +434,7 @@ function formatDate(iso: string) {
                         <Icon name="lucide:grip-vertical" size="14" />
                       </div>
                       <span class="min-w-0 flex-1 truncate text-sm font-semibold leading-5">{{ article.title }}</span>
-                      <span :class="[BADGE, statusClass(article.status)]">{{ $t(`help.admin.status.${article.status}`) }}</span>
+                      <HelpStatusBadge :status="article.status" />
                       <span class="w-24 shrink-0 text-right text-xs font-medium leading-4 text-muted-foreground">{{ formatDate(article.updatedAt) }}</span>
                     </NuxtLink>
                   </template>
