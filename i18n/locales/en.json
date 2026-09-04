@@ -904,7 +904,9 @@
       "moreIn": "More in {name}",
       "notFoundTitle": "404 — Article not found",
       "notFoundHint": "This article is not published, or the link is wrong.",
-      "backToHelp": "Back to Help Center"
+      "backToHelp": "Back to Help Center",
+      "rateLimited": "Too many searches",
+      "rateLimitedHint": "You are searching faster than we can keep up. Try again in a moment."
     }
   }
 }

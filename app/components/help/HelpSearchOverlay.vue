@@ -15,6 +15,7 @@ const localePath = useLocalePath()
 
 const hits = ref<SearchHit[]>([])
 const total = ref(0)
+const rateLimited = ref(false)
 
 let timer: ReturnType<typeof setTimeout>
 let seq = 0
@@ -29,11 +30,14 @@ watch(() => props.query, (value) => {
       if (mine !== seq) return
       hits.value = result.data
       total.value = result.total
+      rateLimited.value = false
     }
-    catch {
+    catch (e) {
       if (mine !== seq) return
       hits.value = []
       total.value = 0
+      rateLimited.value = (e as { statusCode?: number; response?: { status?: number } }).statusCode === 429
+        || (e as { response?: { status?: number } }).response?.status === 429
     }
   }, 200)
 }, { immediate: true })
@@ -80,8 +84,10 @@ function segments(text: string, ranges: [number, number][]) {
     </template>
 
     <div v-else class="px-[18px] py-7 text-center">
-      <div class="text-sm font-semibold">{{ $t('help.portal.noMatch') }}</div>
-      <div class="mt-1 text-xs leading-[18px] text-muted-foreground">{{ $t('help.portal.noMatchHint') }}</div>
+      <div class="text-sm font-semibold">{{ rateLimited ? $t('help.portal.rateLimited') : $t('help.portal.noMatch') }}</div>
+      <div class="mt-1 text-xs leading-[18px] text-muted-foreground">
+        {{ rateLimited ? $t('help.portal.rateLimitedHint') : $t('help.portal.noMatchHint') }}
+      </div>
     </div>
   </div>
 </template>

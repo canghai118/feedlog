@@ -904,7 +904,9 @@
       "moreIn": "{name}中的更多文章",
       "notFoundTitle": "404 —— 文章不存在",
       "notFoundHint": "这篇文章未发布，或者链接有误。",
-      "backToHelp": "返回帮助中心"
+      "backToHelp": "返回帮助中心",
+      "rateLimited": "搜索太频繁",
+      "rateLimitedHint": "请稍候片刻再试。"
     }
   }
 }
