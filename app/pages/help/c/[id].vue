@@ -20,9 +20,7 @@ const articles = computed(() => data.value?.articles ?? [])
 
 usePageOg({ kind: 'helpCollection', title: () => collection.value?.name, description: () => collection.value?.description })
 
-function formatDate(iso: string) {
-  return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date(iso))
-}
+const formatDate = useFormatDate()
 </script>
 
 <template>

@@ -24,10 +24,17 @@ watch(() => props.query, (value) => {
   const q = value.trim()
   timer = setTimeout(async () => {
     const mine = ++seq
-    const result = await $fetch<{ total: number; data: SearchHit[] }>('/api/help/search', { query: { q } })
-    if (mine !== seq) return
-    hits.value = result.data
-    total.value = result.total
+    try {
+      const result = await $fetch<{ total: number; data: SearchHit[] }>('/api/help/search', { query: { q } })
+      if (mine !== seq) return
+      hits.value = result.data
+      total.value = result.total
+    }
+    catch {
+      if (mine !== seq) return
+      hits.value = []
+      total.value = 0
+    }
   }, 200)
 }, { immediate: true })
 

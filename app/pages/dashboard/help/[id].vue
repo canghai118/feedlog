@@ -135,7 +135,11 @@ async function pickCollection(collectionId: string) {
     draftCollectionId.value = collectionId
     return
   }
-  if (collectionId !== collection.value?.id) await patch({ collectionId })
+  if (collectionId === collection.value?.id) return
+
+  const pending = { ...form }
+  await patch({ collectionId })
+  Object.assign(form, pending)
 }
 
 async function copyUrl() {

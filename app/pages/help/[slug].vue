@@ -47,9 +47,7 @@ const anchorId = (heading: { text?: string; index?: number }) => {
   return seen ? `${base}-${seen + 1}` : base
 }
 
-function formatDate(iso: string) {
-  return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date(iso))
-}
+const formatDate = useFormatDate()
 
 const bodyRoot = ref<HTMLElement | null>(null)
 

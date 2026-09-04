@@ -11,7 +11,11 @@ interface PortalCollection {
 
 const localePath = useLocalePath()
 
-const { data } = await useFetch<{ data: PortalCollection[] }>('/api/help/collections')
+const { data, error } = await useFetch<{ data: PortalCollection[] }>('/api/help/collections')
+
+if (error.value) {
+  throw createError({ statusCode: error.value.statusCode ?? 404, statusMessage: 'Not Found', fatal: true })
+}
 const collections = computed(() => data.value?.data ?? [])
 
 const query = ref('')
