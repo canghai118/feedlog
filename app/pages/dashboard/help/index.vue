@@ -66,6 +66,10 @@ watch(view, () => {
   selected.value = new Set()
 })
 
+watch(page, () => {
+  selected.value = new Set()
+})
+
 const flat = computed(() => view.value === 'articles' || !!debouncedSearch.value)
 const selecting = computed(() => selected.value.size > 0)
 
@@ -104,11 +108,17 @@ async function refreshAll() {
   await Promise.all([refreshStats(), refreshCollections(), refreshArticles()])
 }
 
+function deselectIn(collectionId: string) {
+  const hidden = new Set(collections.value.find(c => c.id === collectionId)?.articles.map(a => a.id))
+  selected.value = new Set([...selected.value].filter(articleId => !hidden.has(articleId)))
+}
+
 function toggleExpanded(id: string) {
   const next = new Set(expanded.value)
   if (next.has(id)) next.delete(id)
   else next.add(id)
   expanded.value = next
+  if (!next.has(id)) deselectIn(id)
 }
 
 function toggleSelected(id: string) {
@@ -165,6 +175,7 @@ function onCollectionDragStart(event: { oldIndex?: number }) {
   const next = new Set(expanded.value)
   next.delete(dragged.id)
   expanded.value = next
+  deselectIn(dragged.id)
 }
 
 async function onCollectionsDragEnd() {
