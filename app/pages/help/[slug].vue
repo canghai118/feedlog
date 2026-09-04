@@ -40,12 +40,17 @@ const headings = computed(() =>
   ((article.value?.content ?? '').replace(/^```[\s\S]*?^```/gm, '').match(/^#{2,3}\s+.+$/gm) ?? []).length)
 
 const anchorSeen = new Map<string, number>()
+let anchorLastIndex = Number.POSITIVE_INFINITY
+
 const anchorId = (heading: { text?: string; index?: number }) => {
-  if (heading?.index === 0) anchorSeen.clear()
+  const index = heading?.index ?? 0
+  if (index <= anchorLastIndex) anchorSeen.clear()
+  anchorLastIndex = index
+
   const base = String(heading?.text ?? '').toLowerCase()
     .replace(new RegExp(`[^a-z0-9${CJK_RANGE}]+`, 'g'), '-')
     .replace(/^-|-$/g, '')
-    || `section-${heading?.index ?? 0}`
+    || `section-${index}`
   const seen = anchorSeen.get(base) ?? 0
   anchorSeen.set(base, seen + 1)
   return seen ? `${base}-${seen + 1}` : base
@@ -133,7 +138,13 @@ useRobotsRule(computed(() => (article.value ? 'index, follow' : 'noindex')))
             {{ $t('help.portal.onThisPage') }}
           </p>
           <ClientOnly>
-            <MdCatalog :editor-id="editorId" :catalog-max-depth="3" :scroll-element-offset-top="24" />
+            <MdCatalog
+              :editor-id="editorId"
+              :md-heading-id="anchorId"
+              :catalog-max-depth="3"
+              scroll-element="html"
+              :scroll-element-offset-top="24"
+            />
           </ClientOnly>
         </aside>
       </div>
