@@ -1,4 +1,4 @@
-import { and, asc, eq, inArray, sql } from 'drizzle-orm'
+import { and, asc, eq, inArray } from 'drizzle-orm'
 import { helpArticle, helpCollection } from '#layers/feedlog/server/db/schemas'
 
 export default defineEventHandler(async (event) => {
@@ -26,21 +26,11 @@ export default defineEventHandler(async (event) => {
     return { data: rows, pagination: { page: 1, pageSize: rows.length, total: rows.length } }
   }
 
-  const page = Math.max(Number(query.page) || 1, 1)
-  const pageSize = Math.min(Number(query.pageSize) || 10, 100)
-
-  const [countResult] = await db
-    .select({ total: sql<number>`cast(count(*) as int)` })
-    .from(helpCollection)
-    .where(eq(helpCollection.orgId, orgId))
-
   const collections = await db
     .select(fields)
     .from(helpCollection)
     .where(eq(helpCollection.orgId, orgId))
     .orderBy(asc(helpCollection.position), asc(helpCollection.id))
-    .limit(pageSize)
-    .offset((page - 1) * pageSize)
 
   const articles = collections.length
     ? await db
@@ -66,6 +56,6 @@ export default defineEventHandler(async (event) => {
         articles: own.map(({ collectionId: _collectionId, ...a }) => a),
       }
     }),
-    pagination: { page, pageSize, total: countResult?.total ?? 0 },
+    pagination: { page: 1, pageSize: collections.length, total: collections.length },
   }
 })

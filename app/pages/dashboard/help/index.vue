@@ -79,7 +79,6 @@ const { data: collectionsData, refresh: refreshCollections } = await useFetch<{
   data: AdminCollection[]
   pagination: { total: number }
 }>('/api/admin/help/collections', {
-  query: computed(() => ({ page: page.value, pageSize: PAGE_SIZE })),
   immediate: true,
   deep: true,
 })
@@ -207,8 +206,8 @@ async function runBulk(action: 'publish' | 'unpublish') {
 
 const CHIP = 'inline-flex shrink-0 items-center rounded border px-2 py-0.5 text-[10px] font-bold leading-[15px]'
 
-const rangeFrom = computed(() => (total.value === 0 ? 0 : (page.value - 1) * PAGE_SIZE + 1))
-const rangeTo = computed(() => Math.min(page.value * PAGE_SIZE, total.value))
+const rangeFrom = computed(() => (total.value === 0 ? 0 : flat.value ? (page.value - 1) * PAGE_SIZE + 1 : 1))
+const rangeTo = computed(() => (flat.value ? Math.min(page.value * PAGE_SIZE, total.value) : total.value))
 
 function formatDate(iso: string) {
   return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date(iso))
@@ -463,7 +462,7 @@ function formatDate(iso: string) {
         <span class="text-xs font-medium text-muted-foreground">
           {{ $t('help.admin.showing', { from: rangeFrom, to: rangeTo, total }) }}
         </span>
-        <div class="flex gap-2">
+        <div v-if="flat" class="flex gap-2">
           <button
             type="button"
             class="flex h-8 w-8 items-center justify-center rounded border border-border text-xs font-bold disabled:opacity-40"
