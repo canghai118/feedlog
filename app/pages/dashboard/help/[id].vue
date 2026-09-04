@@ -31,12 +31,14 @@ const route = useRoute()
 const router = useRouter()
 const localePath = useLocalePath()
 
-const id = route.params.id as string
-const isNew = computed(() => id === 'new')
+const id = computed(() => route.params.id as string)
+const isNew = computed(() => id.value === 'new')
 
-const { data: article, refresh } = await useFetch<ArticleDetail>(`/api/admin/help/articles/${id}`, {
+const { data: article, refresh } = await useFetch<ArticleDetail>(() => `/api/admin/help/articles/${id.value}`, {
   immediate: !isNew.value,
 })
+
+watch(isNew, (value) => { if (!value) refresh() })
 const { data: collectionsData } = await useFetch<{ data: CollectionOption[] }>('/api/admin/help/collections', {
   query: { flat: 1 },
 })
@@ -81,7 +83,7 @@ function formatStamp(iso: string | null | undefined) {
 async function patch(body: Record<string, unknown>) {
   saving.value = true
   try {
-    await $fetch(`/api/admin/help/articles/${id}`, { method: 'PATCH', body })
+    await $fetch(`/api/admin/help/articles/${id.value}`, { method: 'PATCH', body })
     await refresh()
     return true
   }
@@ -157,7 +159,7 @@ async function removeArticle() {
 
   saving.value = true
   try {
-    await $fetch(`/api/admin/help/articles/${id}`, { method: 'DELETE' })
+    await $fetch(`/api/admin/help/articles/${id.value}`, { method: 'DELETE' })
     toast.success(t('help.admin.editor.deleted'))
     await router.push(localePath('/dashboard/help'))
   }
