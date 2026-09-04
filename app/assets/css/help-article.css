@@ -1,3 +1,6 @@
+.help-article-styled .md-editor {
+  background: transparent;
+}
 .help-article-styled .md-editor-preview-wrapper {
   padding: 0;
 }
