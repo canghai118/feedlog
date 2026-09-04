@@ -142,7 +142,7 @@ useRobotsRule(computed(() => (article.value ? 'index, follow' : 'noindex')))
 <template>
   <div class="flex-1 overflow-auto">
     <div v-if="article" class="mx-auto max-w-[1080px] px-6 pb-16 pt-12">
-      <div class="grid items-start gap-10 [grid-template-columns:minmax(0,720px)_280px]">
+      <div class="grid items-start gap-10 lg:[grid-template-columns:minmax(0,720px)_280px]">
         <div>
           <div class="mb-[18px] flex flex-wrap items-center gap-2 text-[13px] leading-[18px]">
             <NuxtLink :to="localePath('/help')" class="font-semibold text-muted-foreground hover:text-foreground">{{ $t('help.portal.back') }}</NuxtLink>
@@ -182,7 +182,7 @@ useRobotsRule(computed(() => (article.value ? 'index, follow' : 'noindex')))
           </div>
         </div>
 
-        <aside v-show="toc.length >= 2" class="sticky top-6">
+        <aside v-show="toc.length >= 2" class="sticky top-6 hidden lg:block">
           <p class="mb-3 flex items-center gap-2 text-[13px] font-bold leading-[18px] text-muted-foreground">
             <Icon name="lucide:list" size="15" />
             {{ $t('help.portal.onThisPage') }}
