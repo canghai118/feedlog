@@ -67,6 +67,7 @@ watch(view, () => {
 })
 
 const flat = computed(() => view.value === 'articles' || !!debouncedSearch.value)
+const selecting = computed(() => selected.value.size > 0)
 
 const { data: stats, refresh: refreshStats } = await useFetch<{ collectionCount: number; articleCount: number }>('/api/admin/help/stats')
 
@@ -156,6 +157,14 @@ function createArticle() {
   const collectionId = collections.value[0]?.id
   if (!collectionId) return
   return router.push({ path: localePath('/dashboard/help/new'), query: { collection: collectionId } })
+}
+
+function onCollectionDragStart(event: { oldIndex?: number }) {
+  const dragged = collections.value[event.oldIndex ?? -1]
+  if (!dragged || !expanded.value.has(dragged.id)) return
+  const next = new Set(expanded.value)
+  next.delete(dragged.id)
+  expanded.value = next
 }
 
 async function onCollectionsDragEnd() {
@@ -332,7 +341,7 @@ function formatDate(iso: string) {
               class="flex h-5 w-5 shrink-0 items-center justify-center rounded-[6px] border-2 bg-card transition-all"
               :class="selected.has(article.id)
                 ? 'border-primary bg-primary text-primary-foreground opacity-100'
-                : 'border-border text-transparent opacity-0 group-hover:opacity-100'"
+                : `border-border text-transparent ${selecting ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`"
               @click.prevent.stop="toggleSelected(article.id)"
             >
               <Icon name="lucide:check" size="13" />
@@ -354,7 +363,7 @@ function formatDate(iso: string) {
             item-key="id"
             handle=".drag-handle"
             ghost-class="opacity-50"
-            @start="expanded = new Set()"
+            @start="onCollectionDragStart"
             @end="onCollectionsDragEnd"
           >
             <template #item="{ element: collection }">
@@ -374,7 +383,7 @@ function formatDate(iso: string) {
                     class="flex h-5 w-5 shrink-0 items-center justify-center rounded-[6px] border-2 bg-card transition-all"
                     :class="collectionSelection(collection) !== 'none'
                       ? 'border-primary bg-primary text-primary-foreground opacity-100'
-                      : 'border-border text-transparent opacity-0 group-hover:opacity-100'"
+                      : `border-border text-transparent ${selecting ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`"
                     @click.stop="toggleCollectionSelection(collection)"
                   >
                     <Icon v-if="collectionSelection(collection) === 'all'" name="lucide:check" size="13" />
@@ -423,7 +432,7 @@ function formatDate(iso: string) {
                         class="flex h-5 w-5 shrink-0 items-center justify-center rounded-[6px] border-2 bg-card transition-all"
                         :class="selected.has(article.id)
                           ? 'border-primary bg-primary text-primary-foreground opacity-100'
-                          : 'border-border text-transparent opacity-0 group-hover:opacity-100'"
+                          : `border-border text-transparent ${selecting ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`"
                         @click.prevent.stop="toggleSelected(article.id)"
                       >
                         <Icon name="lucide:check" size="13" />
