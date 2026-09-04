@@ -57,12 +57,14 @@ const formatDate = useFormatDate()
 const bodyRoot = ref<HTMLElement | null>(null)
 const toc = ref<{ id: string; text: string; level: number }[]>([])
 const activeId = ref('')
+let headingEls: HTMLElement[] = []
+let syncQueued = false
 
 const TOC_OFFSET = 24
 
 function readHeadings() {
-  const nodes = bodyRoot.value?.querySelectorAll<HTMLElement>('h2[id], h3[id]') ?? []
-  toc.value = [...nodes].map(node => ({
+  headingEls = [...(bodyRoot.value?.querySelectorAll<HTMLElement>('h2[id], h3[id]') ?? [])]
+  toc.value = headingEls.map(node => ({
     id: node.id,
     text: node.textContent?.replace(/#$/, '').trim() ?? '',
     level: Number(node.tagName[1]),
@@ -77,12 +79,20 @@ function syncActive() {
     return
   }
 
-  let current = toc.value[0]?.id ?? ''
-  for (const item of toc.value) {
-    const el = document.getElementById(item.id)
-    if (el && el.getBoundingClientRect().top <= TOC_OFFSET + 1) current = item.id
+  let current = headingEls[0]?.id ?? ''
+  for (const el of headingEls) {
+    if (el.getBoundingClientRect().top <= TOC_OFFSET + 1) current = el.id
   }
   activeId.value = current
+}
+
+function queueSync() {
+  if (syncQueued) return
+  syncQueued = true
+  requestAnimationFrame(() => {
+    syncQueued = false
+    syncActive()
+  })
 }
 
 function goToHeading(id: string) {
@@ -112,9 +122,9 @@ function mountAnchors() {
 
 onMounted(() => {
   nextTick(mountAnchors)
-  window.addEventListener('scroll', syncActive, { passive: true })
+  window.addEventListener('scroll', queueSync, { passive: true })
 })
-onBeforeUnmount(() => window.removeEventListener('scroll', syncActive))
+onBeforeUnmount(() => window.removeEventListener('scroll', queueSync))
 watch(() => article.value?.content, () => nextTick(mountAnchors))
 
 usePageOg({
