@@ -22,6 +22,10 @@ const { t } = useI18n()
 const segment = String(route.params.slug ?? '')
 const shortId = segment.split('-')[0] ?? ''
 
+if (!usePortalOrg().value.modules.helpCenter) {
+  throw createError({ statusCode: 404, statusMessage: 'Not Found', fatal: true })
+}
+
 const { data, error } = await useFetch<ArticlePage>(`/api/help/articles/${shortId}`)
 
 if (import.meta.server && error.value) {
