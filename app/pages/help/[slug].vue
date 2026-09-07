@@ -149,7 +149,7 @@ useRobotsRule(computed(() => (article.value ? 'index, follow' : 'noindex')))
 </script>
 
 <template>
-  <div class="flex-1 overflow-auto">
+  <div class="flex-1">
     <div v-if="article" class="mx-auto max-w-[1080px] px-6 pb-16 pt-12">
       <div class="grid items-start gap-10 lg:[grid-template-columns:minmax(0,720px)_280px]">
         <div>
@@ -191,7 +191,7 @@ useRobotsRule(computed(() => (article.value ? 'index, follow' : 'noindex')))
           </div>
         </div>
 
-        <aside v-show="toc.length >= 2" class="sticky top-6 hidden lg:block">
+        <aside v-show="toc.length >= 2" class="sticky top-[105px] hidden lg:block">
           <p class="mb-3 flex items-center gap-2 text-[13px] font-bold leading-[18px] text-muted-foreground">
             <Icon name="lucide:list" size="15" />
             {{ $t('help.portal.onThisPage') }}
