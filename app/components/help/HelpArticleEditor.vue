@@ -49,9 +49,7 @@ const draftCollectionId = ref(props.collectionId ?? '')
 const saving = ref(false)
 const pickerOpen = ref(false)
 const previewOpen = ref(false)
-const leaveOpen = ref(false)
 const leavingAfterWrite = ref(false)
-let leaveResolve: ((go: boolean) => void) | null = null
 
 function syncForm() {
   form.title = article.value?.title ?? ''
@@ -181,21 +179,16 @@ async function copyUrl() {
   toast.success(t('help.admin.editor.copied'))
 }
 
-function confirmLeave(): Promise<boolean> {
-  leaveOpen.value = true
-  return new Promise((resolve) => { leaveResolve = resolve })
-}
-
-function answerLeave(go: boolean) {
-  leaveOpen.value = false
-  leaveResolve?.(go)
-  leaveResolve = null
-}
-
 onBeforeRouteLeave(async () => {
   if (leavingAfterWrite.value) return true
   if (!dirty.value && !(isNew.value && (form.title || form.content))) return true
-  return await confirmLeave()
+  return await confirm({
+    title: t('help.admin.editor.leaveTitle'),
+    description: t('help.admin.editor.leaveBody'),
+    confirmText: t('help.admin.editor.leaveDiscard'),
+    cancelText: t('help.admin.editor.leaveKeep'),
+    variant: 'destructive',
+  })
 })
 
 function goBack() {
@@ -360,20 +353,5 @@ function goBack() {
         </div>
       </div>
     </div>
-
-    <Dialog v-model:open="leaveOpen">
-      <DialogContent :show-close-button="false" class="!max-w-[420px] !p-0 !gap-0 overflow-hidden border-border bg-card !rounded-xl">
-        <DialogTitle class="px-6 pb-2 pt-[22px] text-base font-bold leading-[22px]">{{ $t('help.admin.editor.leaveTitle') }}</DialogTitle>
-        <p class="px-6 pb-5 text-[13px] leading-5 text-muted-foreground">{{ $t('help.admin.editor.leaveBody') }}</p>
-        <div class="flex items-center justify-end gap-2 bg-background px-6 py-3.5">
-          <button type="button" class="inline-flex h-9 items-center rounded-lg border border-border px-3 text-xs font-bold hover:bg-secondary" @click="answerLeave(false)">
-            {{ $t('help.admin.editor.leaveKeep') }}
-          </button>
-          <button type="button" class="inline-flex h-9 items-center rounded-lg border border-destructive/40 px-3 text-xs font-bold text-destructive hover:bg-destructive/10" @click="answerLeave(true)">
-            {{ $t('help.admin.editor.leaveDiscard') }}
-          </button>
-        </div>
-      </DialogContent>
-    </Dialog>
   </div>
 </template>
