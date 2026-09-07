@@ -40,6 +40,7 @@ export default defineEventHandler(async (event) => {
     })
     .from(helpArticle)
     .where(and(
+      eq(helpArticle.orgId, orgId),
       eq(helpArticle.collectionId, row.collectionId),
       eq(helpArticle.status, 'published'),
       ne(helpArticle.id, row.id),

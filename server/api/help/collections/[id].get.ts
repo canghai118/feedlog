@@ -35,7 +35,7 @@ export default defineEventHandler(async (event) => {
       updatedAt: helpArticle.updatedAt,
     })
     .from(helpArticle)
-    .where(and(eq(helpArticle.collectionId, id), eq(helpArticle.status, 'published')))
+    .where(and(eq(helpArticle.orgId, orgId), eq(helpArticle.collectionId, id), eq(helpArticle.status, 'published')))
     .orderBy(asc(helpArticle.position), asc(helpArticle.id))
 
   return { collection, articles }
