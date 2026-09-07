@@ -59,7 +59,7 @@ function syncForm() {
   form.content = article.value?.content ?? ''
 }
 syncForm()
-watch(article, syncForm)
+watch(() => article.value?.id, syncForm)
 
 const dirty = computed(() =>
   form.title !== (article.value?.title ?? '')
@@ -146,9 +146,7 @@ async function pickCollection(collectionId: string) {
   }
   if (collectionId === collection.value?.id) return
 
-  const pending = { ...form }
   await patch({ collectionId })
-  Object.assign(form, pending)
 }
 
 async function removeArticle() {
