@@ -824,6 +824,8 @@
       "unpublish": "撤下",
       "publishResult": "已发布 {n} 篇文章",
       "unpublishResult": "已撤下 {n} 篇文章",
+      "reorderFailed": "排序保存失败",
+      "bulkFailed": "选中文章更新失败",
       "status": {
         "draft": "草稿",
         "published": "已发布",

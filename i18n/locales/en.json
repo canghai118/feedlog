@@ -824,6 +824,8 @@
       "unpublish": "Unpublish",
       "publishResult": "{n} article published | {n} articles published",
       "unpublishResult": "{n} article unpublished | {n} articles unpublished",
+      "reorderFailed": "Could not save the new order",
+      "bulkFailed": "Could not update the selected articles",
       "status": {
         "draft": "Draft",
         "published": "Published",

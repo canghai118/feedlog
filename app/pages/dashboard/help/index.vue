@@ -179,29 +179,46 @@ function onCollectionDragStart(event: { oldIndex?: number }) {
 }
 
 async function onCollectionsDragEnd() {
-  await $fetch('/api/admin/help/collections/reorder', {
-    method: 'PATCH',
-    body: { ids: collections.value.map(c => c.id) },
-  })
+  try {
+    await $fetch('/api/admin/help/collections/reorder', {
+      method: 'PATCH',
+      body: { ids: collections.value.map(c => c.id) },
+    })
+  }
+  catch {
+    toast.error(t('help.admin.reorderFailed'))
+    await refreshAll()
+  }
 }
 
 async function onArticlesDragEnd(collection: AdminCollection) {
-  await $fetch('/api/admin/help/articles/reorder', {
-    method: 'PATCH',
-    body: { collectionId: collection.id, ids: collection.articles.map(a => a.id) },
-  })
+  try {
+    await $fetch('/api/admin/help/articles/reorder', {
+      method: 'PATCH',
+      body: { collectionId: collection.id, ids: collection.articles.map(a => a.id) },
+    })
+  }
+  catch {
+    toast.error(t('help.admin.reorderFailed'))
+    await refreshAll()
+  }
 }
 
 async function runBulk(action: 'publish' | 'unpublish') {
   const ids = [...selected.value]
   if (!ids.length) return
-  const result = await $fetch<{ affected: number }>(`/api/admin/help/articles/bulk-${action}`, {
-    method: 'POST',
-    body: { ids },
-  })
-  selected.value = new Set()
-  await refreshAll()
-  toast.success(t(`help.admin.${action}Result`, { n: result.affected }, result.affected))
+  try {
+    const result = await $fetch<{ affected: number }>(`/api/admin/help/articles/bulk-${action}`, {
+      method: 'POST',
+      body: { ids },
+    })
+    selected.value = new Set()
+    await refreshAll()
+    toast.success(t(`help.admin.${action}Result`, { n: result.affected }, result.affected))
+  }
+  catch {
+    toast.error(t('help.admin.bulkFailed'))
+  }
 }
 
 const CHIP = 'inline-flex shrink-0 items-center rounded border px-2 py-0.5 text-[10px] font-bold leading-[15px]'
