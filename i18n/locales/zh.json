@@ -318,6 +318,8 @@
     "emailPlaceholder": "you{'@'}example.com",
     "passwordMinHint": "至少 8 个字符",
     "checkEmail": "查收邮件",
+    "localAuthRequired": "你通过 {org} 登录，此操作需要直接登录。",
+    "localAuthTitle": "直接登录",
     "backToSignIn": "← 返回登录",
     "signingIn": "登录中……",
     "fields": {
