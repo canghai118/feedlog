@@ -65,7 +65,11 @@ const activeId = ref('')
 let headingEls: HTMLElement[] = []
 let syncQueued = false
 
-const TOC_OFFSET = 24
+const TOC_GAP = 24
+
+function scrollOffset() {
+  return (document.querySelector('header')?.getBoundingClientRect().height ?? 0) + TOC_GAP
+}
 
 function readHeadings() {
   headingEls = [...(bodyRoot.value?.querySelectorAll<HTMLElement>('h2[id], h3[id]') ?? [])]
@@ -84,9 +88,10 @@ function syncActive() {
     return
   }
 
+  const offset = scrollOffset()
   let current = headingEls[0]?.id ?? ''
   for (const el of headingEls) {
-    if (el.getBoundingClientRect().top <= TOC_OFFSET + 1) current = el.id
+    if (el.getBoundingClientRect().top <= offset + 1) current = el.id
   }
   activeId.value = current
 }
@@ -103,7 +108,7 @@ function queueSync() {
 function goToHeading(id: string) {
   const el = document.getElementById(id)
   if (!el) return
-  const top = el.getBoundingClientRect().top + window.scrollY - TOC_OFFSET
+  const top = el.getBoundingClientRect().top + window.scrollY - scrollOffset()
   window.scrollTo({ top, behavior: 'smooth' })
   activeId.value = id
 }
