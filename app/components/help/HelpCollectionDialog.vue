@@ -36,6 +36,8 @@ watch(open, (value) => {
   error.value = ''
 }, { immediate: true })
 
+watch([name, description], () => { error.value = '' })
+
 async function handleSave() {
   if (!name.value.trim()) {
     error.value = t('help.admin.collection.nameRequired')
