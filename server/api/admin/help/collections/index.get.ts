@@ -16,21 +16,13 @@ export default defineEventHandler(async (event) => {
     position: helpCollection.position,
   }
 
-  if (query.flat === '1') {
-    const rows = await db
-      .select(fields)
-      .from(helpCollection)
-      .where(eq(helpCollection.orgId, orgId))
-      .orderBy(asc(helpCollection.position), asc(helpCollection.id))
-
-    return { data: rows, pagination: { page: 1, pageSize: rows.length, total: rows.length } }
-  }
-
   const collections = await db
     .select(fields)
     .from(helpCollection)
     .where(eq(helpCollection.orgId, orgId))
     .orderBy(asc(helpCollection.position), asc(helpCollection.id))
+
+  if (query.flat === '1') return { data: collections }
 
   const articles = collections.length
     ? await db
@@ -56,6 +48,5 @@ export default defineEventHandler(async (event) => {
         articles: own.map(({ collectionId: _collectionId, ...a }) => a),
       }
     }),
-    pagination: { page: 1, pageSize: collections.length, total: collections.length },
   }
 })

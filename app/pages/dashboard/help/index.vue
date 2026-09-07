@@ -77,7 +77,6 @@ const { data: stats, refresh: refreshStats } = await useFetch<{ collectionCount:
 
 const { data: collectionsData, refresh: refreshCollections } = await useFetch<{
   data: AdminCollection[]
-  pagination: { total: number }
 }>('/api/admin/help/collections', {
   immediate: true,
   deep: true,
@@ -93,7 +92,7 @@ const { data: articlesData, refresh: refreshArticles } = await useFetch<{
 const collections = computed(() => collectionsData.value?.data ?? [])
 const articles = computed(() => articlesData.value?.data ?? [])
 
-const total = computed(() => (flat.value ? articlesData.value?.pagination.total : collectionsData.value?.pagination.total) ?? 0)
+const total = computed(() => (flat.value ? articlesData.value?.pagination.total ?? 0 : collections.value.length))
 const pageCount = computed(() => Math.max(1, Math.ceil(total.value / PAGE_SIZE)))
 
 const isEmpty = computed(() => (stats.value?.collectionCount ?? 0) === 0 && (stats.value?.articleCount ?? 0) === 0)
