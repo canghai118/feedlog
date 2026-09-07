@@ -10,7 +10,7 @@ const NEUTRAL = 'text-[var(--status-open)] bg-[var(--status-open-bg)] border-[va
 const TONES: Record<HelpBadgeStatus, string> = {
   published: 'text-[var(--status-done)] bg-[var(--status-done-bg)] border-[var(--status-done-border)]',
   draft: NEUTRAL,
-  archived: 'text-[#8D6E52] bg-[rgba(141,110,82,.10)] border-[rgba(141,110,82,.22)]',
+  archived: 'text-[var(--status-archived)] bg-[var(--status-archived-bg)] border-[var(--status-archived-border)]',
   hidden: NEUTRAL,
 }
 
