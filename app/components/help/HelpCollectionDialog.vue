@@ -134,7 +134,6 @@ async function handleDelete() {
           type="text"
           class="mt-2 h-10 w-full rounded-md border border-border bg-background px-3 text-sm outline-none focus:border-primary"
           :placeholder="$t('help.admin.collection.namePlaceholder')"
-          @keydown.enter="handleSave"
         >
 
         <p class="mt-4 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
