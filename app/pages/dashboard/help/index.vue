@@ -222,8 +222,8 @@ async function runBulk(action: 'publish' | 'unpublish') {
 
 const CHIP = 'inline-flex shrink-0 items-center rounded border px-2 py-0.5 text-[10px] font-bold leading-[15px]'
 
-const rangeFrom = computed(() => (total.value === 0 ? 0 : flat.value ? (page.value - 1) * PAGE_SIZE + 1 : 1))
-const rangeTo = computed(() => (flat.value ? Math.min(page.value * PAGE_SIZE, total.value) : total.value))
+const rangeFrom = computed(() => (total.value === 0 ? 0 : (page.value - 1) * PAGE_SIZE + 1))
+const rangeTo = computed(() => Math.min(page.value * PAGE_SIZE, total.value))
 
 function formatDate(iso: string) {
   return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date(iso))
