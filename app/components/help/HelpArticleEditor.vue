@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { onClickOutside, onKeyStroke } from '@vueuse/core'
 import { toast } from 'vue-sonner'
 import type { HelpArticleStatus, HelpCollectionIcon } from '#layers/feedlog/shared/constants/help'
 import '~/assets/css/help-article.css'
@@ -48,6 +49,9 @@ const form = reactive({ title: '', description: '', content: '' })
 const draftCollectionId = ref(props.collectionId ?? '')
 const saving = ref(false)
 const pickerOpen = ref(false)
+const pickerRef = ref<HTMLElement | null>(null)
+onClickOutside(pickerRef, () => { pickerOpen.value = false })
+onKeyStroke('Escape', () => { pickerOpen.value = false })
 const previewOpen = ref(false)
 const leavingAfterWrite = ref(false)
 
@@ -281,7 +285,7 @@ function goBack() {
       <aside class="flex w-[300px] shrink-0 grow-0 basis-[300px] flex-col gap-[22px] overflow-auto border-l border-border bg-card px-5 py-6">
         <div>
           <p class="mb-1.5 text-[11px] font-bold uppercase leading-[17px] tracking-[.05em] text-muted-foreground">{{ $t('help.admin.editor.collection') }}</p>
-          <div class="relative">
+          <div ref="pickerRef" class="relative">
             <div
               class="flex h-9 cursor-pointer items-center justify-between rounded-lg border border-border bg-card px-3 text-[13px] font-semibold leading-[18px]"
               @click="pickerOpen = !pickerOpen"
