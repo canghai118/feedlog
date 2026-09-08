@@ -258,7 +258,7 @@ function goBack() {
           <p class="mb-1.5 mt-[22px] text-[11px] font-bold uppercase leading-[17px] tracking-[.05em] text-muted-foreground">{{ $t('help.admin.editor.description') }}</p>
           <textarea
             v-model="form.description"
-            class="min-h-[44px] w-full resize-none border-0 border-b border-border bg-transparent pb-3 text-sm leading-[22px] text-muted-foreground outline-none"
+            class="min-h-[44px] w-full resize-none border-0 border-b border-border bg-transparent pb-3 text-sm leading-[22px] outline-none"
             :placeholder="$t('help.admin.editor.descriptionPlaceholder')"
           />
 
