@@ -64,6 +64,8 @@ const toc = ref<{ id: string; text: string; level: number }[]>([])
 const activeId = ref('')
 let headingEls: HTMLElement[] = []
 let syncQueued = false
+let navLock = false
+let navLockTimer: ReturnType<typeof setTimeout>
 
 const TOC_GAP = 24
 
@@ -81,7 +83,14 @@ function readHeadings() {
   syncActive()
 }
 
+function releaseNavLock() {
+  navLock = false
+  clearTimeout(navLockTimer)
+}
+
 function syncActive() {
+  if (navLock) return
+
   const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2
   if (atBottom && toc.value.length) {
     activeId.value = toc.value[toc.value.length - 1]!.id
@@ -109,6 +118,9 @@ function goToHeading(id: string) {
   const el = document.getElementById(id)
   if (!el) return
   const top = el.getBoundingClientRect().top + window.scrollY - scrollOffset()
+  navLock = true
+  clearTimeout(navLockTimer)
+  navLockTimer = setTimeout(releaseNavLock, 2500)
   window.scrollTo({ top, behavior: 'smooth' })
   activeId.value = id
 }
@@ -133,8 +145,13 @@ function mountAnchors() {
 onMounted(() => {
   nextTick(mountAnchors)
   window.addEventListener('scroll', queueSync, { passive: true })
+  window.addEventListener('scrollend', releaseNavLock)
 })
-onBeforeUnmount(() => window.removeEventListener('scroll', queueSync))
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', queueSync)
+  window.removeEventListener('scrollend', releaseNavLock)
+  clearTimeout(navLockTimer)
+})
 watch(() => article.value?.content, () => nextTick(mountAnchors))
 
 usePageOg({
