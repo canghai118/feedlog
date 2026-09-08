@@ -16,12 +16,14 @@ const localePath = useLocalePath()
 const hits = ref<SearchHit[]>([])
 const total = ref(0)
 const rateLimited = ref(false)
+const loading = ref(false)
 
 let timer: ReturnType<typeof setTimeout>
 let seq = 0
 
 watch(() => props.query, (value) => {
   clearTimeout(timer)
+  loading.value = true
   const q = value.trim()
   timer = setTimeout(async () => {
     const mine = ++seq
@@ -38,6 +40,9 @@ watch(() => props.query, (value) => {
       total.value = 0
       rateLimited.value = (e as { statusCode?: number; response?: { status?: number } }).statusCode === 429
         || (e as { response?: { status?: number } }).response?.status === 429
+    }
+    finally {
+      if (mine === seq) loading.value = false
     }
   }, 200)
 }, { immediate: true })
@@ -82,6 +87,10 @@ function segments(text: string, ranges: [number, number][]) {
         {{ $t('help.portal.more', { n: total - hits.length }) }}
       </p>
     </template>
+
+    <div v-else-if="loading" class="flex justify-center px-[18px] py-7">
+      <Icon name="lucide:loader-2" size="20" class="animate-spin text-muted-foreground" />
+    </div>
 
     <div v-else class="px-[18px] py-7 text-center">
       <div class="text-sm font-semibold">{{ rateLimited ? $t('help.portal.rateLimited') : $t('help.portal.noMatch') }}</div>
