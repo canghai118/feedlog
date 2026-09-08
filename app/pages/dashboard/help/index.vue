@@ -277,13 +277,13 @@ function formatDate(iso: string) {
 
     <div v-if="!isEmpty" class="flex shrink-0 items-center justify-between gap-3 border-b border-border bg-background/30 px-6 py-4">
       <template v-if="selected.size">
-        <div class="flex items-center gap-3">
+        <div class="flex h-9 items-center gap-3">
           <span class="text-[13px] font-bold leading-[18px]">{{ $t('help.admin.selected', { n: selected.size }, selected.size) }}</span>
           <button type="button" class="text-xs font-bold text-muted-foreground hover:text-foreground" @click="selected = new Set()">
             {{ $t('help.admin.clear') }}
           </button>
         </div>
-        <div class="flex items-center gap-2">
+        <div class="flex h-9 items-center gap-2">
           <button
             type="button"
             class="inline-flex h-8 items-center rounded-lg border border-border px-3 text-xs font-bold hover:bg-secondary"
