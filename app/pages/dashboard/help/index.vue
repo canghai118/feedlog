@@ -477,11 +477,11 @@ function formatDate(iso: string) {
         </ClientOnly>
       </div>
 
-      <div class="flex h-16 shrink-0 items-center justify-between border-t border-border bg-card px-6">
+      <div v-if="flat" class="flex h-16 shrink-0 items-center justify-between border-t border-border bg-card px-6">
         <span class="text-xs font-medium text-muted-foreground">
           {{ $t('help.admin.showing', { from: rangeFrom, to: rangeTo, total }) }}
         </span>
-        <div v-if="flat" class="flex gap-2">
+        <div class="flex gap-2">
           <button
             type="button"
             class="flex h-8 w-8 items-center justify-center rounded border border-border text-xs font-bold disabled:opacity-40"
