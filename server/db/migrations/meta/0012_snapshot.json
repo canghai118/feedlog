@@ -1,5 +1,5 @@
 {
-  "id": "64a5d890-cabf-416e-8a20-9f4a9f41ef6a",
+  "id": "12e648ee-863d-46c1-a075-5b6b85686984",
   "prevId": "981ed10f-6a5b-4790-a1d1-6d4ce042a9e1",
   "version": "7",
   "dialect": "postgresql",
@@ -994,21 +994,7 @@
           "with": {}
         }
       },
-      "foreignKeys": {
-        "help_article_collection_id_help_collection_id_fk": {
-          "name": "help_article_collection_id_help_collection_id_fk",
-          "tableFrom": "help_article",
-          "tableTo": "help_collection",
-          "columnsFrom": [
-            "collection_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},

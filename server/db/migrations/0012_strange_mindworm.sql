@@ -25,7 +25,6 @@ CREATE TABLE "help_collection" (
 	"position" integer NOT NULL
 );
 --> statement-breakpoint
-ALTER TABLE "help_article" ADD CONSTRAINT "help_article_collection_id_help_collection_id_fk" FOREIGN KEY ("collection_id") REFERENCES "public"."help_collection"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 CREATE UNIQUE INDEX "idx_help_article_org_shortid" ON "help_article" USING btree ("org_id","short_id");--> statement-breakpoint
 CREATE INDEX "idx_help_article_collection" ON "help_article" USING btree ("collection_id","status","position","id");--> statement-breakpoint
 CREATE INDEX "idx_help_article_org_status" ON "help_article" USING btree ("org_id","status");--> statement-breakpoint

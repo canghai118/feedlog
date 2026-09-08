@@ -25,7 +25,7 @@ export const helpCollection = pgTable('help_collection', {
 export const helpArticle = pgTable('help_article', {
   id: uuid().primaryKey().$defaultFn(() => uuidv7()),
   orgId: text('org_id').notNull(),
-  collectionId: uuid('collection_id').notNull().references(() => helpCollection.id, { onDelete: 'cascade' }),
+  collectionId: uuid('collection_id').notNull(),
   shortId: varchar('short_id', { length: 6 }).notNull(),
   slug: varchar({ length: 120 }).notNull(),
   status: varchar({ length: 20 }).$type<HelpArticleStatus>().notNull().default('draft'),
