@@ -257,17 +257,17 @@ function formatDate(iso: string) {
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" class="w-64">
-          <DropdownMenuItem class="flex-col !items-start gap-0.5 py-2" @select="openCreate">
+          <DropdownMenuItem class="group flex-col !items-start gap-0.5 py-2" @select="openCreate">
             <span class="text-sm font-bold">{{ $t('help.admin.newCollection') }}</span>
-            <span class="text-xs text-muted-foreground">{{ $t('help.admin.newCollectionHint') }}</span>
+            <span class="text-xs text-muted-foreground group-focus:text-accent-foreground/80">{{ $t('help.admin.newCollectionHint') }}</span>
           </DropdownMenuItem>
           <DropdownMenuItem
-            class="flex-col !items-start gap-0.5 py-2"
+            class="group flex-col !items-start gap-0.5 py-2"
             :disabled="!hasCollections"
             @select="createArticle"
           >
             <span class="text-sm font-bold">{{ $t('help.admin.newArticle') }}</span>
-            <span class="text-xs text-muted-foreground">
+            <span class="text-xs text-muted-foreground group-focus:text-accent-foreground/80">
               {{ hasCollections ? $t('help.admin.newArticleHint') : $t('help.admin.newArticleDisabledHint') }}
             </span>
           </DropdownMenuItem>
