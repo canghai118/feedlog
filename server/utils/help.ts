@@ -1,6 +1,6 @@
 import slugify from 'slugify'
 import { customAlphabet } from 'nanoid'
-import { pinyin } from 'pinyin-pro'
+import pinyin from 'pinyinlite'
 import { and, eq, sql } from 'drizzle-orm'
 import type { SQL } from 'drizzle-orm'
 import { helpArticle, helpCollection } from '#layers/feedlog/server/db/schemas'
@@ -15,7 +15,10 @@ export function generateHelpShortId(): string {
 }
 
 export function generateHelpSlug(title: string): string {
-  const latin = pinyin(title, { toneType: 'none', nonZh: 'consecutive', type: 'string' })
+  // Keep non-Chinese runs intact so product names and version numbers stay readable.
+  const latin = pinyin(title, { keepUnrecognized: true })
+    .map(([reading], index) => reading === title[index] ? reading : ` ${reading} `)
+    .join('')
   return slugify(latin, { lower: true, strict: true }).slice(0, 80)
 }
 
